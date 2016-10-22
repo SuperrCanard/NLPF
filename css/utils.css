@@ -1,0 +1,77 @@
+.project {
+        display: inline-block;
+        
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+}
+
+.project fieldset {
+        border: solid 3px black;  
+    
+        min-width:  400px;
+        max-width: 400px;
+        width: 400px;
+        
+        max-height: 280px;
+        min-height: 280px;
+        height: 280px;
+        
+        overflow: hidden;
+}
+
+.project .header {
+    min-width: 380px;
+    max-width: 380px;
+    width: 380px;
+        
+    max-height: 70px;
+    min-height: 70px;
+    height: 70px;
+    
+}
+
+.project img {
+    margin: 0px 5px;
+    float: right;
+    
+    min-width:  64px;
+    max-width: 64px;
+    width: 64px;
+        
+    max-height: 64px;
+    min-height: 64px;
+    height: 64px;
+    
+}
+
+.project input[type="button"] {
+    margin: 5px 0px;
+    float: right;
+    
+    min-width:  80px;
+    max-width: 80px;
+    width: 80px;
+        
+    max-height: 25px;
+    min-height: 25px;
+    height: 25px;
+    
+}
+
+.project .description {
+    margin: 5px 0px;
+    padding: 3px;
+    
+    min-width: 380px;
+    max-width: 380px;
+    width: 380px;
+        
+    max-height: 150px;
+    min-height: 150px;
+    height: 150px;
+    
+    overflow: hidden;
+    
+    border: 3px solid black;
+}
