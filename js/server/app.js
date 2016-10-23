@@ -13,11 +13,15 @@ io.on('connection', function (socket) {
     ioArray.push(socket);
 
     /*** Send all projects to the user ***/
-    for (var i = 0; i < projectArray.length; ++i) {
-        socket.emit('newProject', projectArray[i]);
-    }
+
+    socket.on("getAllProjects", function (nothing) {
+        for (var i = 0; i < projectArray.length; ++i) {
+            socket.emit('newProject', projectArray[i]);
+        }
+    });
 
     /*** On new project ***/
+
     socket.on('newProject', function (project) {
         projectArray.push(project);
         utils.printfObject(project);
@@ -25,6 +29,13 @@ io.on('connection', function (socket) {
         io.emit('newProject', project);
     });
 
+    /*** Get a specific project ***/
+
+    socket.on('getProject', function (project) {
+        utils.printfObject(project);
+
+        socket.emit('getProject', projectArray[parseInt(project)]);
+    });
 
 });
 
