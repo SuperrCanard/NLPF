@@ -1,13 +1,17 @@
 $(document).ready(function () {
 
-    var post = JSON.parse(localStorage.getItem("post"));
+    var session = {};
 
-    //sendMessage("getProject", post);
+    sendMessage("getSession", {});
 
-    var this_project = post["project"];
+    socket.on("getSession", function (attr) {
+        session = attr;
 
-    /***[TODO] Modifier les différentes informations de la page en fonction du projet récupéré ***/
-    $("#projectTitle").text(this_project["name"]);
-    //etc.
+        var this_project = session.project;
+
+        /***[TODO] Modifier les différentes informations de la page en fonction du projet récupéré ***/
+        $("#projectTitle").text(this_project["name"]);
+        //etc.
+    });
 
 });
