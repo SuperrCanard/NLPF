@@ -34,7 +34,7 @@ function importHtml(elt, filename) {
 }
 
 function displayProject(elt, project, idButton) {
-    var projectName = "Projet #" + project["id"] + " - " + project["name"];
+    var projectName = "Projet #" + (project["id"] + 1) + " - " + project["name"];
 
     $(elt).html('<div class="project"> \
             <form> \
