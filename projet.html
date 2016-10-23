@@ -9,6 +9,7 @@
 		<script src="./js/client/jquery.js"></script>
         <script src="./js/client/utils.js"></script>
         <script src="./js/client/socket.js"></script>
+        <script type="text/javascript" src="./js/client/nicEdit.js"></script>
 		<script src="./js/client/projet.js"></script>
 
         <link rel="stylesheet" href="./css/utils.css" type="text/css" />
@@ -29,7 +30,7 @@
      			<input id="projectname" type ="text" class="form-control" name="projectname" placeholder="Définissez le nom du projet" required="required"/>
      		</div>
      	</div>
-     	<div class="form-group">
+     	<div claéss="form-group">
      		<label for="projectdesc" class="col-md-3 control-label">Description</label>
      		<div class="col-md-9">
      			<input id="projectdesc" type ="textarea" class="form-control" name="projectdesc" placeholder="Décrivez votre projet en quelques phrases" required="required"/>
@@ -48,5 +49,8 @@
      		</div>
      	</div>
 	</body>
+	<script type="text/javascript">
+		bkLib.onDomLoaded(function() { nicEditors.allTextAreas() });
+	</script>
 
 </html>
