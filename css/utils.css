@@ -1,3 +1,10 @@
+/****** GENERAL DISPLAY ******/
+
+.page_title {
+    font-size: 60px;
+}
+
+/******  PROJECT DISPLAY ******/
 .project {
         display: inline-block;
         

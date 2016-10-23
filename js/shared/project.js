@@ -1,4 +1,4 @@
-var Product = Class.extend({
+var Project = Class.extend({
 
     initialize: function (id, name, date, gain, img, description) {
         this.id = id;
