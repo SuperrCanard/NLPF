@@ -1,4 +1,27 @@
+if (socket == undefined)
+    var socket = null;
+
 $(document).ready(function () {
+
+    if (socket == undefined || !socket) {
+        socket = io.connect('http://localhost:8080');
+
+        var session_open = localStorage.getItem("session_open");
+        if (session_open == "true") {
+            var session_id = parseInt(localStorage.getItem("session_id"));
+            sendMessage("newConnection", session_id);
+
+            socket.on("badConnection", function(id) {
+                localStorage.setItem("session_id", id);
+            });
+        }
+        else {
+            socket.on("newConnection", function (id) {
+                localStorage.setItem("session_open", "true");
+                localStorage.setItem("session_id", id);
+            });
+        }
+    }
 
     $("import").each(function () {
         var htmlFile = $(this).attr("src");
@@ -10,18 +33,20 @@ function importHtml(elt, filename) {
     $(elt).load(filename);
 }
 
-function displayProject(elt, projectName, gain, date, img, description) {
+function displayProject(elt, project, idButton) {
+    var projectName = "Projet #" + (project["id"] + 1) + " - " + project["name"];
+
     $(elt).html('<div class="project"> \
             <form> \
                 <fieldset> \
                     <legend>' + projectName + '</legend> \
-                    <img src="' + img + '" alt="Image"></img> \
+                    <img src="' + project["img"] + '" alt="Image"></img> \
                     <div class="header"> \
-                        Gain: ' + gain + ' € / mois<br/> \
-                        Crée le: ' + date + '<br/> \
+                        Gain: ' + project["gain"] + ' € / mois<br/> \
+                        Crée le: ' + project["date"] + '<br/> \
                     </div> \
-                    <div class="description">' + description + '</div> \
-                    <input type="button" value="Participer !"></input> \
+                    <div class="description">' + project["description"] + '</div> \
+                    <input type="button" id="' + idButton + '" value="Participer !"></input> \
                 </fieldset> \
             </form> \
         </div>');
@@ -41,17 +66,24 @@ function displayContrepartie(elt, name, description) {
 }
 
 function printfObject(object) {
+
+	var output = printfObject2(object);
+
+	alert(output);
+}
+
+function printfObject2(object) {
         var output = '';
         for (var property in object) {
             if (object[property] instanceof Object)
-                output += printfObject(object[property]);
+                output += printfObject2(object[property]);
             else
-                output += object[property] + '<br>';
+                output +=  property + ': ' + object[property] + '\n';
         }
 
         return output;
 }
 
-function sendMessage(socket, myEvent, msg) {
-    socket.emit(myEvent, { 'data': msg });
+function sendMessage(myEvent, msg) {
+    socket.emit(myEvent, msg);
 }
