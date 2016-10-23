@@ -27,3 +27,31 @@ function displayProject(elt, projectName, gain, date, img, description) {
         </div>');
 
 }
+
+function displayContrepartie(elt, name, description) {
+    $(elt).html('<div class="contrepartie"> \
+            <form> \
+                <fieldset> \
+                    <legend>' + name + '</legend> \
+                    ' + description + '\
+                    <input type="button" value="J\'accepte"></input> \
+                </fieldset> \
+            </form> \
+        </div>');
+}
+
+function printfObject(object) {
+        var output = '';
+        for (var property in object) {
+            if (object[property] instanceof Object)
+                output += printfObject(object[property]);
+            else
+                output += object[property] + '<br>';
+        }
+
+        return output;
+}
+
+function sendMessage(socket, myEvent, msg) {
+    socket.emit(myEvent, { 'data': msg });
+}

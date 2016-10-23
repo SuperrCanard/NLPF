@@ -8,22 +8,7 @@ $(document).ready(function () {
     displayProject("#projet6", "Projet #3 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
 
 
-    function printfObject2(object) {
-
-        var output = '';
-        for (var property in object) {
-            if (object[property] instanceof Object)
-                output += printfObject2(object[property]);
-            else
-                output += object[property] + '<br>';
-        }
-
-        return output;
-    }
-
-    function sendMessage(socket, myEvent, msg) {
-        socket.emit(myEvent, { 'data': msg });
-    }
+    
 
     var socket = io.connect('http://localhost:8080');
 

@@ -1,0 +1,16 @@
+.confirmation {
+     border: solid 3px black;  
+     
+     margin: 5px 0px;
+     padding: 3px;
+    
+     min-width:  95%;
+     max-width: 95%;
+     width: 95%;
+        
+     max-height: 150px;
+     min-height: 150px;
+     height: 150px;
+        
+     overflow: hidden;
+}

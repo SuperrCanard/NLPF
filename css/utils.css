@@ -1,7 +1,21 @@
 /****** GENERAL DISPLAY ******/
 
+html, body {
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	font-size: 1em; /* default: 16px */
+	padding: 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+body {
+    padding: 0px 10px;
+}
+
 .page_title {
     font-size: 60px;
+    padding-bottom: 10px;
 }
 
 /******  PROJECT DISPLAY ******/
@@ -11,6 +25,8 @@
         overflow: hidden;
         margin: 0;
         padding: 0;
+        padding-right: 20px;
+        padding-bottom: 20px;
 }
 
 .project fieldset {
@@ -67,6 +83,35 @@
 }
 
 .project .description {
+    margin: 5px 0px;
+    padding: 3px;
+    
+    min-width: 380px;
+    max-width: 380px;
+    width: 380px;
+        
+    max-height: 150px;
+    min-height: 150px;
+    height: 150px;
+    
+    overflow: hidden;
+    
+    border: 3px solid black;
+}
+
+/******  CONTRIBUTION DISPLAY ******/
+
+.contrepartie {
+        display: inline-block;
+        
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        padding-right: 20px;
+        padding-bottom: 20px;
+}
+
+.contrepartie fieldset {
     margin: 5px 0px;
     padding: 3px;
     
