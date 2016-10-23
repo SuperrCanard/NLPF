@@ -23,7 +23,7 @@ $(document).ready(function () {
         $('#' + idButton).click(function () {
             alert(this_project["name"]);
 
-            localStorage.setItem("post", this_project.id);
+            localStorage.setItem("post", JSON.stringify({project: this_project}));
 
             window.location = './projet.html';
             /***[TODO] Amener a la page de participation / présentation de projet ***/
