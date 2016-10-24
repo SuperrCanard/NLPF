@@ -26,7 +26,7 @@ $(document).ready(function () {
                 session.project = this_project;
 
                 sendMessage("setSession", session);
-                window.location = './projet.html';
+                window.location = './project_details.html';
             });
         });
     });

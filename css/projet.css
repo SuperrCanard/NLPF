@@ -1,0 +1,31 @@
+html, body {
+	width: 100%;
+	height: 100%;
+	background-color: #FFFFFF;
+	font-size: 1em; /* default: 16px */
+	padding: 0px 0px;
+	margin: 0px 0px 0px 0px;
+}
+
+body {
+    padding: 0px 10px;
+}
+
+.createproject{
+	float: left;
+	width: 50%;
+	height: 100%;
+}
+
+.createcompensation{
+	float: left;
+	width: 50%;
+	height: 100%;
+	background-color: #FAEBD7;
+
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
