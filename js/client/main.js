@@ -1,24 +1,34 @@
 $(document).ready(function () {
 
-    displayProject("#projet1", "Projet #1 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
-    displayProject("#projet2", "Projet #2 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
-    displayProject("#projet3", "Projet #3 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
-    displayProject("#projet4", "Projet #1 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
-    displayProject("#projet5", "Projet #2 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
-    displayProject("#projet6", "Projet #3 - Sympa", "1652", "15.10.2016", "./images/windows.jpg", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque bibendum lectus ultricies dolor rhoncus volutpat. Aliquam facilisis vel enim at viverra. Sed consectetur dapibus sagittis. Fusce metus urna, finibus in porttitor suscipit, suscipit at eros. Nunc finibus elit ullamcorper, convallis dolor ac, viverra sem. Nullam pulvinar maximus ex. Proin in metus purus. Suspendisse nec tortor ut purus tincidunt commodo auctor vel lacus. Fusce nec hendrerit purus. Curabitur vitae eros vitae nisi scelerisque iaculis. ");
+    var session = {};
+
+    sendMessage("getSession", {});
 
 
-    
+    socket.on("getSession", function (attr) {
+        session = attr;
+        sendMessage("getAllProjects", {});
 
-    var socket = io.connect('http://localhost:8080');
+        /*** Evenement de réception des projets en temps réel ***/
 
-    $("#id_submit").on('click', function () {
-        sendMessage(socket, 'myOnClick', $("#id_nom").val());
+        socket.on('newProject', function (project) {
+            $('#projectDisplay').prepend($('<span id="project' + project["id"] + '"></span>'));
+
+            var idButton = "projectButton" + project["id"];
+
+            displayProject("#project" + project["id"], project, idButton);
+
+            var this_project = project;
+
+            $('#' + idButton).click(function () {
+
+                /***Amener a la page de participation / présentation de projet ***/
+                session.project = this_project;
+
+                sendMessage("setSession", session);
+                window.location = './projet.html';
+            });
+        });
     });
 
-    socket.on('refreshArray', function (message) {
-
-
-        $('#message').append($('<li>')).html(printfObject2(message));
-    });
 });
