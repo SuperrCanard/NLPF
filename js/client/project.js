@@ -1,17 +1,30 @@
 $(document).ready(function () {
 
+		$("#submitCompensation").click(createCompensation);
+	});
+
+    var index = 1;
+function createCompensation()
+	{
+		var compensationName = document.getElementById("compensationname").value;
+		console.log($(compensationName));
+		$("#displayCompensation").prepend($('<span id="compensation' + index + '"></span>'));
+		displayCompensationDetails("#compensation" + index, $("#compensationname").val(),
+								 $("#compensationdesc").val(), $("#amount").val());
+		++index;
+	}
+
 	function submit()
 	{
-		var socket = io.connect('http://localhost:8080');
 		var projectName = $('#projectname').val();
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('contact').val();
 		var date = new Date();
-		var myproject = Project.create(projectName, date, 0, '', projectDesc, projectContact, projectAuthor)
+		var myproject = Project.create(projectName, 0, date, projectDesc, projectAuthor, projectContact);
 
 		socket.emit('newProject', {
-			project : my project
+			project : myproject
 		});
 		 window.location = '../index.html';
 	}
@@ -82,4 +95,3 @@ $(document).ready(function () {
 	   }
 	   submit();
 	}
-}

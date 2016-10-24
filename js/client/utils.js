@@ -65,6 +65,18 @@ function displayContrepartie(elt, name, description) {
         </div>');
 }
 
+function displayCompensationDetails(elt, name, description, amount) {
+    $(elt).html('<div class="contrepartie"> \
+            <form> \
+                <fieldset> \
+                    <legend>' + name + " - " + amount + "€" + '</legend> \
+                    ' + description + '\
+                    <input type="button" value="modifier"></input> <input type="button" value="supprimer"</input>\
+                </fieldset> \
+            </form> \
+        </div>');
+}
+
 function printfObject(object) {
 
 	var output = printfObject2(object);
