@@ -136,32 +136,30 @@ $(document).ready(function () {
 		{
 			surligne(champ, true);
 		    alert("Veuillez entrer une description supérieur à 140 charactères");
-		    switch (champ.id)
-		    {
-		    	case 'projectdesc':
-		    		projDesc = false;
-		    		break;
-	    		case 'compensationdesc':
-	    			compDesc = false;
-	    			break;
-	    		default:
-	    			return false;
-		    }
+		    projDesc = false;
 		}
 		else
 		{
 			surligne(champ, false);
-		      switch (champ.id)
-		    {
-		    	case 'projectdesc':
-		    		projDesc = true;
-		    		break;
-	    		case 'compensationdesc':
-	    			compDesc = true;
-	    			break;
-	    		default:
-	    			return true;
-		    }
+    		projDesc = true;
+	
+		}
+		verifCompensation();
+	    verifProject();
+	}
+
+	function verifDescCompensation(champ)
+	{
+		if (champ.value.length < 40)
+		{
+			surligne(champ, true);
+		    alert("Veuillez entrer une description supérieur à 40 charactères");
+		    compDesc = false;
+		}
+		else
+		{
+			surligne(champ, false);
+    		compDesc = true;
 		}
 		verifCompensation();
 	    verifProject();
