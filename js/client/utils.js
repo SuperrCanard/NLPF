@@ -8,10 +8,10 @@ $(document).ready(function () {
 
         var session_open = localStorage.getItem("session_open");
         if (session_open == "true") {
-            var session_id = parseInt(localStorage.getItem("session_id"));
+            var session_id = localStorage.getItem("session_id");
             sendMessage("newConnection", session_id);
 
-            socket.on("badConnection", function(id) {
+            socket.on("badConnection", function (id) {
                 localStorage.setItem("session_id", id);
             });
         }
