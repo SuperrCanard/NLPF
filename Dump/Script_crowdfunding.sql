@@ -1,63 +1,67 @@
-DROP TABLE IF EXISTS "Crowdfunding"."User";
-DROP TABLE IF EXISTS "Crowdfunding"."Project";
-DROP TABLE IF EXISTS "Crowdfunding"."Compensation";
-DROP TABLE IF EXISTS "Crowdfunding".contribution;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "project" CASCADE;
+DROP TABLE IF EXISTS "compensation" CASCADE;
+DROP TABLE IF EXISTS contribution CASCADE;
 
--- Table: "Crowdfunding"."User"
+-- Table: "user"
 
-CREATE TABLE "Crowdfunding"."User"
+CREATE TABLE "user"
 (
-  "Name" "char"[] NOT NULL,
   user_id serial NOT NULL,
-  "Fisrtname" "char"[] NOT NULL,
-  email text NOT NULL,
+  "name" text NOT NULL,
+  "firstname" text NOT NULL,
+  email text NOT NULL UNIQUE,
+  password text NOT NULL,
   CONSTRAINT user_id PRIMARY KEY (user_id)
 );
 
--- Table: "Crowdfunding"."Project"
+-- Table: "project"
 
-CREATE TABLE "Crowdfunding"."Project"
+CREATE TABLE "project"
 (
   project_id serial NOT NULL,
-  "Name" "char"[] NOT NULL,
-  "Description" text NOT NULL,
-  "Contact" text NOT NULL,
+  "name" text NOT NULL,
+  "author" text NOT NULL,
+  "total_amount" integer NOT NULL,
+  "description" text NOT NULL,
+  "contact" text NOT NULL,
+  "image" text NOT NULL,
   ref_user_id serial NOT NULL,
-  "Date" date NOT NULL,
+  "date" date NOT NULL,
   CONSTRAINT project_id PRIMARY KEY (project_id),
   CONSTRAINT ref_user_id FOREIGN KEY (ref_user_id)
-      REFERENCES "Crowdfunding"."User" (user_id) MATCH SIMPLE
+      REFERENCES "user" (user_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table: "Crowdfunding"."Compensation"
+-- Table: "compensation"
 
-CREATE TABLE "Crowdfunding"."Compensation"
+CREATE TABLE "compensation"
 (
-  "Name" "char"[] NOT NULL,
-  "Description" text,
-  amount integer NOT NULL,
   compensation_id serial NOT NULL,
+  "name" text NOT NULL,
+  "description" text,
+  amount integer NOT NULL,
   ref_project_id serial NOT NULL,
   CONSTRAINT compensation_id PRIMARY KEY (compensation_id),
   CONSTRAINT ref_project_id FOREIGN KEY (ref_project_id)
-      REFERENCES "Crowdfunding"."Project" (project_id) MATCH SIMPLE
+      REFERENCES "project" (project_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );
 
--- Table: "Crowdfunding".contribution
+-- Table: contribution
 
-CREATE TABLE "Crowdfunding".contribution
+CREATE TABLE contribution
 (
   contribution_id serial NOT NULL,
   date date NOT NULL,
   ref_user_id serial NOT NULL,
   ref_compensation_id serial NOT NULL,
   CONSTRAINT contribution_id PRIMARY KEY (contribution_id),
-  CONSTRAINT ref_compensation_id FOREIGN KEY (ref_compensation_id)
-      REFERENCES "Crowdfunding"."Compensation" (compensation_id) MATCH SIMPLE
+  CONSTRAINT ref_Compensation_id FOREIGN KEY (ref_Compensation_id)
+      REFERENCES "compensation" (compensation_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT ref_user_id FOREIGN KEY (ref_user_id)
-      REFERENCES "Crowdfunding"."User" (user_id) MATCH SIMPLE
+      REFERENCES "user" (user_id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE
 );

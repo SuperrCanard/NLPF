@@ -9,14 +9,24 @@ $(document).ready(function () {
         session = attr;
         sendMessage("getAllProjects", {});
 
-        /*** Evenement de réception des projets en temps réel ***/
+        /*** Evenement de réception des projets ***/
 
         socket.on('newProject', function (project) {
-            $('#projectDisplay').prepend($('<span id="project' + project["id"] + '"></span>'));
 
-            var idButton = "projectButton" + project["id"];
+            var project_id = "project" + project["project_id"];
+            var node = $("#" + project_id);
 
-            displayProject("#project" + project["id"], project, idButton);
+            // Evite les doublons de projet
+            if (node.length != 0)
+                return;
+
+            $('#projectDisplay').prepend($('<span id="' + project_id + '"></span>'));
+
+            var idButton = "projectButton" + project["project_id"];
+
+            //printfObject(project);
+
+            displayProject("#" + project_id, project, idButton);
 
             var this_project = project;
 

@@ -34,15 +34,15 @@ function importHtml(elt, filename) {
 }
 
 function displayProject(elt, project, idButton) {
-    var projectName = "Projet #" + (project["id"] + 1) + " - " + project["name"];
+    var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
 
     $(elt).html('<div class="project"> \
             <form> \
                 <fieldset> \
                     <legend>' + projectName + '</legend> \
-                    <img src="' + project["img"] + '" alt="Image"></img> \
+                    <img src="' + project["image"] + '" alt="Image"></img> \
                     <div class="header"> \
-                        Gain: ' + project["gain"] + ' € / mois<br/> \
+                        Gain: ' + project["total_amount"] + ' € / mois<br/> \
                         Crée le: ' + project["date"] + '<br/> \
                     </div> \
                     <div class="description">' + project["description"] + '</div> \
@@ -60,18 +60,6 @@ function displayContrepartie(elt, name, description) {
                     <legend>' + name + '</legend> \
                     ' + description + '\
                     <input type="button" value="J\'accepte"></input> \
-                </fieldset> \
-            </form> \
-        </div>');
-}
-
-function displayCompensationDetails(elt, name, description, amount) {
-    $(elt).html('<div class="contrepartie"> \
-            <form> \
-                <fieldset> \
-                    <legend>' + name + " - " + amount + "€" + '</legend> \
-                    ' + description + '\
-                    <button button class="btn btn-primary">Modifier</button> <button button class="btn btn-primary">Supprimer</button>\
                 </fieldset> \
             </form> \
         </div>');

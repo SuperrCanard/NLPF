@@ -3,11 +3,17 @@ var utils = require('./utils');
 var fs = require('fs'); 
 var url = require('url');
 var io = require('socket.io')(app);
-var projectArray = [];
-var ioArray = [];
-var sessions = [];
-var hashSessions = [];
+var sql = require('./sql');
 
+
+/*** Données volatiles ***/
+var ioArray = []; // Tableau des sockets
+var sessions = []; // Tableau des sessions (pour le partage de variable entre les pages côté client)
+var hashSessions = []; // Tableau des identifiants de session (pour reconnaitre les différents clients)
+var sql_user = []; // Tableau des utilisateurs connectés (pour faire le lien avec les users de la base de données)
+
+
+/*** Fonction de gestion des requêtes HTTP ***/
 function createServer(req, res) {
     var path = url.parse(req.url).pathname;
     var htmldir = __dirname + "/../..";
@@ -15,7 +21,6 @@ function createServer(req, res) {
     var fsCallback = function (error, data) {
         if (error) {
             doc = fs.readFile(htmldir + "/index.html", fsCallback);
-            //console.log(error);
         }
         else {
             res.writeHead(200);
@@ -24,29 +29,6 @@ function createServer(req, res) {
         }
     }
 
-   /* switch(path) {
-        case '/test': {
-          console.log(htmldir + '/test')
-          //doc = fs.readFile(htmldir + '/subpage.html', fsCallback);
-          break;
-        }
-
-        case '/test2': {
-            console.log(htmldir+ '/test2')
-            //doc = fs.readFile(htmldir + '/subpage.html', fsCallback);
-           break;
-        }
-
-    default: 
-        {
-            console.log("asked: " + path);
-            console.log(htmldir + '/index.html')
-            doc = fs.readFile(htmldir + '/index.html', fsCallback);
-            break;
-        }
-    }*/
-
-   // console.log("Accessing " + htmldir + path + " ...");
     if (path == "/" || path == "") {
         doc = fs.readFile(htmldir + "/index.html", fsCallback);
     }
@@ -55,19 +37,11 @@ function createServer(req, res) {
     }
 }
 
-function makeId(length)
-{
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i = 0; i < length; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-
+/*** Ecoute sur le port 8080 et connexion au serveur sql ***/
 app.listen(8080);
+sql.connection();
 
+/*** Permet de retrouver l'identifiant de session en fonction du hash ***/
 function getSessionByHash(hash) {
     if (!hash)
         return -2;
@@ -81,11 +55,12 @@ function getSessionByHash(hash) {
     return -1;
 }
 
-
+/*** Bind toutes les fonctions d'interaction avec le client ***/
 io.on('connection', function (socket) {
     ioArray.push(socket);
     sessions.push({});
-    hashSessions.push(makeId(1024));
+    hashSessions.push(utils.makeId(10)); //1024
+    sql_user.push({ user_id: -1 });
 
     var session_id = sessions.length - 1;
     var user_id = ioArray.length - 1;
@@ -112,36 +87,129 @@ io.on('connection', function (socket) {
         }
     });
 
+    /*** Add a user ***/
+
+    socket.on("newUser", function (user) {
+        sql.addUser(user.name, user.firstname, user.email, user.password, function (results) {
+            console.log("User added to the database");
+            utils.printfObject(results);
+        });
+    });
+
+    /*** Connection ***/
+
+    socket.on("connection", function (user) {
+        sql.getUserByEmailPassword(user.email, user.password, function (results) {
+            console.log("User tried to connect as " + user.email + " (pass: " + user.password + ")");
+            if (results.length == 0)
+                console.log("Connection failed");
+            else {
+                console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
+                sql_user[session_id] = results[0];
+                console.log("sql_user:");
+                utils.printfObject(sql_user[session_id]);
+            }
+            utils.printfObject(results);
+        });
+    });
+
+    /*** Get user information ***/
+
+    socket.on("getUserInfo", function (nothing) {
+        console.log("User has requested his information");
+        utils.printfObject(sql_user[session_id]);
+
+        socket.emit("getUserInfo", sql_user[session_id]);
+    });
+
+    /*** Disconnection ***/
+
+    socket.on("disconnection", function (nothing) {
+        console.log("User has disconnected");
+        sql_user[session_id] = { user_id: -1 };
+    });
+
     /*** Send all projects to the user ***/
 
     socket.on("getAllProjects", function (nothing) {
-        for (var i = 0; i < projectArray.length; ++i) {
-            socket.emit('newProject', projectArray[i]);
-        }
+        sql.getAllProject(function (projectArray) {
+            console.log("The user has requested all projects");
+            utils.printfObject(projectArray);
+
+            for (var i = 0; i < projectArray.length; ++i) {
+                socket.emit('newProject', projectArray[i]);
+            }
+        });
+
+    });
+
+    /*** Send all projects sorted to the user ***/
+
+    socket.on("getAllProjectsSorted", function (nothing) {
+
+        var projectArray = sql.getAllProjectSorted(function (projectArray) {
+            console.log("The user has requested all projects sorted");
+            utils.printfObject(projectArray);
+
+            for (var i = 0; i < projectArray.length; ++i) {
+                socket.emit('newProject', projectArray[i]);
+            }
+        });
+
+
+    });
+
+    /*** Contribute to a project ***/
+
+    socket.on('newContribution', function (contribution) {
+        sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
+            console.log("User contributed to a project");
+        });
+
+    });
+
+    /*** Add compensation to a project ***/
+
+    socket.on('newCompensation', function (compensation) {
+        sql.addCompensation(compensation.ref_project_id, compensation.name, compensation.description, compensation.amount, function (results) {
+            console.log("User created a compensation to a project");
+        });
+
     });
 
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        projectArray.push(project);
-        utils.printfObject(project);
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results) {
+            console.log("New project added");
+            utils.printfObject(results);
 
-        io.emit('newProject', project);
+            io.emit('newProject', results);
+        });
+
     });
 
     /*** Set session content ***/
 
     socket.on("setSession", function (attr) {
+        console.log("The user has set the session");
+
         utils.printfObject(attr);
         sessions[session_id] = attr;
     });
 
     /*** Get a specific project ***/
 
-    socket.on('getProject', function (project) {
-        utils.printfObject(project);
+    socket.on('getProject', function (projectId) {
 
-        socket.emit('getProject', projectArray[parseInt(project)]);
+        var project = sql.getProjectById(projectId, function (results) {
+            console.log("project '" + projectId + "' requested");
+
+            utils.printfObject(project);
+
+            socket.emit('getProject', project);
+        });
+
     });
 
     /*** Get session content ***/
@@ -152,8 +220,3 @@ io.on('connection', function (socket) {
     });
 
 });
-
-
-
-  // wait for the event raised by the client
-  
