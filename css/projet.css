@@ -16,6 +16,11 @@ body {
 	width: 40%;
 }
 
+.btn-primary {
+	float: left;
+	margin-right: 50px;
+}
+
 .control-label {
 	white-space: nowrap;
 	margin-right: 20px;

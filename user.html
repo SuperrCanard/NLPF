@@ -46,10 +46,10 @@
 		         	<div class="form-group">
 		         		<label for="password" class="col-sm-2 control-label">Mot de passe</label>
 		         		<div class="col-sm-10">
-		         			<input id="password" type ="password" class="form-control" name="password" placeholder="Votre mot de passe" required="required" onblur="verifMail(this);"/>
+		         			<input id="password" type ="password" class="form-control" name="password" placeholder="Votre mot de passe" required="required" onblur="verifPassword(this);"/>
 		         		</div>
 		         		<div class="button">
-		                	<button class="btn btn-primary" onclick="return verifPassword();">Valider votre compte</button>
+		                	<button class="btn btn-primary" id="submitUser" disabled='disabled'>Valider votre compte</button>
 		            	</div>
 		         	</div>
 		            
