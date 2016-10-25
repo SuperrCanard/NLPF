@@ -47,7 +47,7 @@ $(document).ready(function () {
 			description : projectDesc, 
 			author : projectAuthor, 
 			contact : projectContact,
-			compensation : listCompensation
+			compensations : listCompensation
 			};
 		socket.emit('newProject', {
 			project : myproject
