@@ -106,8 +106,6 @@ io.on('connection', function (socket) {
             else {
                 console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
                 sql_user[session_id] = results[0];
-                console.log("sql_user:");
-                utils.printfObject(sql_user[session_id]);
             }
             utils.printfObject(results);
         });
@@ -147,12 +145,12 @@ io.on('connection', function (socket) {
 
     socket.on("getAllProjectsSorted", function (nothing) {
 
-        var projectArray = sql.getAllProjectSorted(function (projectArray) {
+        var projectArray = sql.getAllProjectSorted(30, function (projectArray) {
             console.log("The user has requested all projects sorted");
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                socket.emit('newProject', projectArray[i]);
+                socket.emit('newProjectSorted', projectArray[i]);
             }
         });
 
@@ -164,6 +162,8 @@ io.on('connection', function (socket) {
     socket.on('newContribution', function (contribution) {
         sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
             console.log("User contributed to a project");
+
+            socket.emit('needUpdate', {});
         });
 
     });

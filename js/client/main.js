@@ -9,6 +9,14 @@ $(document).ready(function () {
         session = attr;
         sendMessage("getAllProjects", {});
 
+        /*** Evenement d'update ***/
+
+        socket.on('needUpdate', function (nothing) {
+            $('#projectDisplay').html("");
+
+            sendMessage("getAllProjects", {});
+        });
+
         /*** Evenement de réception des projets ***/
 
         socket.on('newProject', function (project) {

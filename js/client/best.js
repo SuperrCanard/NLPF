@@ -7,16 +7,34 @@ $(document).ready(function () {
 
     socket.on("getSession", function (attr) {
         session = attr;
-        sendMessage("getAllProjectsSorted", 30);
+        sendMessage("getAllProjectsSorted", {});
 
-        /*** Evenement de réception des projets en temps réel ***/
+        /*** Evenement d'update ***/
 
-        socket.on('newProject', function (project) {
-            $('#projectDisplayBest').prepend($('<span id="project' + project["id"] + '"></span>'));
+        socket.on('needUpdate', function (nothing) {
+            $('#projectDisplayBest').html("");
 
-            var idButton = "projectButton" + project["id"];
+            sendMessage("getAllProjectsSorted", {});
+        });
 
-            displayProject("#project" + project["id"], project, idButton);
+        /*** Evenement de réception des projets ***/
+
+        socket.on('newProjectSorted', function (project) {
+
+            var project_id = "project" + project["project_id"];
+            var node = $("#" + project_id);
+
+            // Evite les doublons de projet
+            if (node.length != 0)
+                return;
+
+            $('#projectDisplayBest').append($('<span id="' + project_id + '"></span>'));
+
+            var idButton = "projectButton" + project["project_id"];
+
+            //printfObject(project);
+
+            displayProject("#" + project_id, project, idButton);
 
             var this_project = project;
 
