@@ -71,7 +71,7 @@ function displayCompensationDetails(elt, name, description, amount) {
                 <fieldset> \
                     <legend>' + name + " - " + amount + "€" + '</legend> \
                     ' + description + '\
-                    <input type="button" value="modifier"></input> <input type="button" value="supprimer"</input>\
+                    <button button class="btn btn-primary">Modifier</button> <button button class="btn btn-primary">Supprimer</button>\
                 </fieldset> \
             </form> \
         </div>');
