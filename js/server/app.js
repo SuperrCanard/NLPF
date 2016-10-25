@@ -3,7 +3,8 @@ var utils = require('./utils');
 var fs = require('fs'); 
 var url = require('url');
 var io = require('socket.io')(app);
-var projectArray = [];
+var sql = require('./sql');
+
 var ioArray = [];
 var sessions = [];
 var hashSessions = [];
@@ -15,7 +16,6 @@ function createServer(req, res) {
     var fsCallback = function (error, data) {
         if (error) {
             doc = fs.readFile(htmldir + "/index.html", fsCallback);
-            //console.log(error);
         }
         else {
             res.writeHead(200);
@@ -24,29 +24,6 @@ function createServer(req, res) {
         }
     }
 
-   /* switch(path) {
-        case '/test': {
-          console.log(htmldir + '/test')
-          //doc = fs.readFile(htmldir + '/subpage.html', fsCallback);
-          break;
-        }
-
-        case '/test2': {
-            console.log(htmldir+ '/test2')
-            //doc = fs.readFile(htmldir + '/subpage.html', fsCallback);
-           break;
-        }
-
-    default: 
-        {
-            console.log("asked: " + path);
-            console.log(htmldir + '/index.html')
-            doc = fs.readFile(htmldir + '/index.html', fsCallback);
-            break;
-        }
-    }*/
-
-   // console.log("Accessing " + htmldir + path + " ...");
     if (path == "/" || path == "") {
         doc = fs.readFile(htmldir + "/index.html", fsCallback);
     }
@@ -55,18 +32,8 @@ function createServer(req, res) {
     }
 }
 
-function makeId(length)
-{
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for( var i = 0; i < length; i++ )
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-}
-
 app.listen(8080);
+sql.connection();
 
 function getSessionByHash(hash) {
     if (!hash)
@@ -85,7 +52,7 @@ function getSessionByHash(hash) {
 io.on('connection', function (socket) {
     ioArray.push(socket);
     sessions.push({});
-    hashSessions.push(makeId(1024));
+    hashSessions.push(utils.makeId(10)); //1024
 
     var session_id = sessions.length - 1;
     var user_id = ioArray.length - 1;
@@ -112,9 +79,32 @@ io.on('connection', function (socket) {
         }
     });
 
+    /*** Add a user ***/
+
+    socket.on("addUser", function (user) {
+        console.log("User added to the database");
+        utils.printfObject(user);
+
+        sql.addUser(user.name, user.firstname, user.email, user.password);
+    });
+
     /*** Send all projects to the user ***/
 
     socket.on("getAllProjects", function (nothing) {
+        console.log("The user has requested all projects");
+        var projectArray = sql.getAllProject();
+
+        for (var i = 0; i < projectArray.length; ++i) {
+            socket.emit('newProject', projectArray[i]);
+        }
+    });
+
+    /*** Send all projects sorted to the user ***/
+
+    socket.on("getAllProjectsSorted", function (nothing) {
+        console.log("The user has requested all projects sorted");
+        var projectArray = sql.getAllProjectSorted();
+
         for (var i = 0; i < projectArray.length; ++i) {
             socket.emit('newProject', projectArray[i]);
         }
@@ -123,7 +113,9 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        projectArray.push(project);
+        sql.addProject(project.name, project.description, project.contact, project.userId, project.date);
+
+        console.log("New project added");
         utils.printfObject(project);
 
         io.emit('newProject', project);
@@ -132,16 +124,21 @@ io.on('connection', function (socket) {
     /*** Set session content ***/
 
     socket.on("setSession", function (attr) {
+        console.log("The user has set the session");
+
         utils.printfObject(attr);
         sessions[session_id] = attr;
     });
 
     /*** Get a specific project ***/
 
-    socket.on('getProject', function (project) {
+    socket.on('getProject', function (projectId) {
+        console.log("project '" + projectId + "' requested");
+        var project = sql.getProjectById(projectId);
+
         utils.printfObject(project);
 
-        socket.emit('getProject', projectArray[parseInt(project)]);
+        socket.emit('getProject', project);
     });
 
     /*** Get session content ***/
