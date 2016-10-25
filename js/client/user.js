@@ -1,5 +1,5 @@
 $(document).ready(function () {
-
+		$("#submitUser").click(submitUser);
 	});
 
 	var userName = false;
@@ -12,9 +12,13 @@ $(document).ready(function () {
 		var myuser = {
 			name : $('#name').val(),
 			firstname : $('#firstname').val(),
-			password : $('#password').val(),
-			email : $('#mail').val()
+			email : $('#mail').val(),
+			password : $('#password').val()
 		};
+
+		socket.emit("newUser", {
+			user : myuser
+		})
 		window.location = './connexion.html';
 	}
 

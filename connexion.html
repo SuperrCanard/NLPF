@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8"></meta>
+        
+        <title> Tipz </title>
+
+		<script src="./js/client/jquery.js"></script>    
+	    <script src="./js/client/utils.js"></script>
+	    <script src="./js/client/socket.js"></script>
+	    <script src="./js/client/connexion.js"></script>
+
+	  	<link <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+	    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	    <link rel="stylesheet" href="./css/connexion.css" type="text/css" />
+	</head>
+
+	    
+	<body>
+          <nav class="navbar navbar-default">
+            <ul class="nav nav-pills">
+                  <li role="presentation"><a href="./index.html">Accueil</a></li>
+                  <li role="presentation"><a href="./projet.html">Ajouter</a></li>
+                  <li role="presentation"><a href="./best.html">Les meilleurs projets</a></li>
+                  <li role="presentation"><a href="./user.html">S'enregistrer</a></li>
+                  <li role="presentation" class="active"><a href="./connexion.html">Se connecter</a></li>
+            </ul>
+        </nav>
+
+        <div class="panel panel-primary">
+        	<div class="panel-heading">Connexion</div>
+        	<div class="panel-body">
+	        	<div class="form-group">
+	             		<label for="mail" class="col-sm-2 control-label">Email</label>
+	             		<div class="col-sm-10">
+	             			<input id="mail" type ="text" class="form-control" placeholder="Votre email" required="required" onblur="verifChamp(this)"/>
+	             		</div>
+	         	</div>
+	    		<div class="form-group">
+	         		<label for="name" class="col-sm-2 control-label">Mot de passe</label>
+	         		<div class="col-sm-10">
+	         			<input id="password" type ="password" class="form-control" name="password" placeholder="Votre mot de passe" required="required" onblur="verifChamp(this)"/>
+	         		</div>
+         		</div>
+         	</div>
+         	<button class="btn btn-primary" id="submitConnexion" disabled='disabled'>Se connecter</button>
+     	</div>
+     </body>
+</html>
+         
