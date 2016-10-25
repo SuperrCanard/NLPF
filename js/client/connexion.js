@@ -15,10 +15,10 @@ $(document).ready(function () {
  	
  	function submitConnexion()
 	{
-		socket.emit("connexion", {
-			email : $("#mail").val(),
-			password : $("#password").val()
-		})
+	    socket.emit("connection", {
+	        email: $("#mail").val(),
+	        password: $("#password").val()
+	    });
 	}
 
 	function verifChamp(champ)
@@ -62,5 +62,5 @@ $(document).ready(function () {
 		if(userPassword && userMail)
 			document.getElementById('submitConnexion').disabled = '';
 		else
-			document.getElementById('submitCOnnexion').disabled = 'disabled';
+			document.getElementById('submitConnexion').disabled = 'disabled';
 	}
