@@ -137,11 +137,6 @@ io.on('connection', function (socket) {
 
     });
 
-    /*sql.updateTotalAmountProject(projectArray[i].project_id, function (results) {
-                      utils.printfObject(projectArray[i]);
-                      socket.emit('newProject', projectArray[i]);
-                });*/
-
     /*** Send all projects sorted to the user ***/
 
     socket.on("getAllProjectsSorted", function (nothing) {
@@ -162,6 +157,11 @@ io.on('connection', function (socket) {
 
     socket.on('newContribution', function (contribution) {
         sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
+            /*** [TODO] Update le montant total du projet concerné ***/
+            /*sql.updateTotalAmountProject(projectArray[i].project_id, function (results) {
+                      utils.printfObject(projectArray[i]);
+                      socket.emit('newProject', projectArray[i]);
+                });*/
             console.log("User contributed to a project");
         });
 
@@ -179,7 +179,7 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, function (results) {
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results) {
             console.log("New project added");
             utils.printfObject(results);
 

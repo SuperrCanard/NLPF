@@ -30,7 +30,7 @@ module.exports = {
         });
     },
 
-    addProject: function (name, author, description, contact, userId, img, callback) {
+    addProject: function (name, author, description, contact, userId, img, compensations, callback) {
         var real_results = [];
 
         var str = "INSERT INTO \"project\" VALUES (default, '" + name + "', '" + author + "', 0, '" + description + "', '" + contact + "', '" + img + "', " + userId + ", now()) RETURNING project_id, name, author, total_amount, description, contact, image, ref_user_id, date;";
@@ -43,6 +43,10 @@ module.exports = {
         });
 
         query.on('end', function (results) {
+            for (var i = 0; i < compensations.length; ++i) {
+                addCompensation(results.project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results) { });
+            }
+
             callback(real_results);
         });
 
