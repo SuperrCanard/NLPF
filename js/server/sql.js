@@ -30,31 +30,6 @@ module.exports = {
         });
     },
 
-    addProject: function (name, author, description, contact, userId, img, compensations, callback) {
-        var real_results = [];
-
-        var str = "INSERT INTO \"project\" VALUES (default, '" + name + "', '" + author + "', 0, '" + description + "', '" + contact + "', '" + img + "', " + userId + ", now()) RETURNING project_id, name, author, total_amount, description, contact, image, ref_user_id, date;";
-        var query = client.query(str);
-
-        console.log("addProject: " + str)
-
-        query.on('row', function (row) {
-            real_results.push(row);
-        });
-
-        query.on('end', function (results) {
-            for (var i = 0; i < compensations.length; ++i) {
-                addCompensation(real_results.project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results) { });
-            }
-
-            callback(real_results);
-        });
-
-        query.on('error', function (err) {
-            console.log('Query error: ' + err);
-        });
-    },
-
     addCompensation: function (projectId, name, description, amount, callback) {
         var real_results = [];
 
@@ -76,7 +51,93 @@ module.exports = {
         });
     },
 
+    addProject: function (name, author, description, contact, userId, img, compensations, callback) {
+
+        function addCompensation(projectId, name, description, amount, callback) {
+            var real_results = [];
+
+            var str = "INSERT INTO \"compensation\" VALUES (default, '" + name + "', '" + description + "', " + amount + ", " + projectId + ") RETURNING compensation_id, name, description, amount, ref_project_id";
+            var query = client.query(str);
+
+            console.log("addCompensation: " + str);
+
+            query.on('row', function (row) {
+                real_results.push(row);
+            });
+
+            query.on('end', function (results) {
+                callback(real_results);
+            });
+
+            query.on('error', function (err) {
+                console.log('Query error: ' + err);
+            });
+        }
+
+        var real_results = [];
+
+        var str = "INSERT INTO \"project\" VALUES (default, '" + name + "', '" + author + "', 0, '" + description + "', '" + contact + "', '" + img + "', " + userId + ", now()) RETURNING project_id, name, author, total_amount, description, contact, image, ref_user_id, date;";
+        var query = client.query(str);
+
+        console.log("addProject: " + str);
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+
+            for (var i = 0; i < compensations.length; ++i) {
+                addCompensation(real_results[0].project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results) { });
+            }
+
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
     addContribution: function (userId, compensationId, callback) {
+        function updateTotalAmountProject(projectId, callback) {
+            var real_results = [];
+            var totals = [];
+
+            var str = "SELECT SUM(compensation.amount) AS \"total_amount\" FROM \"project\", \"contribution\", \"compensation\" WHERE \"project\".project_id = \"compensation\".ref_project_id AND \"contribution\".ref_compensation_id = \"compensation\".compensation_id AND \"project\".project_id = " + projectId;
+            var query = client.query(str);
+
+            console.log("updateTotalAmountProject: " + str);
+
+            query.on('row', function (row) {
+                totals.push(row);
+            });
+
+            query.on('end', function (results) {
+                var total = totals[0].total_amount;
+                var str2 = "UPDATE \"project\" SET total_amount = " + total + " WhERE project_id = " + projectId;
+                console.log("updateTotalAmountProject: " + str2);
+
+                var query2 = client.query(str2);
+
+                query2.on('row', function (row) {
+                    real_results.push(row);
+                });
+
+                query2.on('error', function (err) {
+                    console.log('Query error: ' + err);
+                });
+
+                query2.on('end', function (results) {
+                    callback(real_results);
+                });
+            });
+
+            query.on('error', function (err) {
+                console.log('Query error: ' + err);
+            });
+        }
+
         var real_results = [];
 
         var str = "INSERT INTO \"contribution\" VALUES (default, now(), " + userId + ", " + compensationId + ") RETURNING contribution_id, date, ref_user_id, ref_compensation_id";
@@ -98,7 +159,7 @@ module.exports = {
             });
 
             query2.on('end', function (results) {
-                updateTotalAmountProject(ref_project_id, function (results) {
+                updateTotalAmountProject(ref_project_id[0].ref_project_id, function (results) {
                     callback(real_results);
                 });
             });
@@ -157,9 +218,9 @@ module.exports = {
     },
 
     getAllProjectSorted: function (number, callback) {
-       var real_results = [];
+        var real_results = [];
 
-        var str = "SELECT * FROM \"project\" ORDER BY project.total_amount LIMIT " + number;
+        var str = "SELECT * FROM \"project\" ORDER BY project.total_amount DESC LIMIT " + number;
         var query = client.query(str);
 
         console.log("getAllProjectSorted: " + str)

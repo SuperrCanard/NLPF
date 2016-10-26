@@ -162,6 +162,8 @@ io.on('connection', function (socket) {
     socket.on('newContribution', function (contribution) {
         sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
             console.log("User contributed to a project");
+
+            socket.emit('needUpdate', {});
         });
 
     });
