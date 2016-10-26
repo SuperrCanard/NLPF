@@ -145,12 +145,12 @@ io.on('connection', function (socket) {
 
     socket.on("getAllProjectsSorted", function (nothing) {
 
-        var projectArray = sql.getAllProjectSorted(function (projectArray) {
+        var projectArray = sql.getAllProjectSorted(30, function (projectArray) {
             console.log("The user has requested all projects sorted");
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                socket.emit('newProject', projectArray[i]);
+                socket.emit('newProjectSorted', projectArray[i]);
             }
         });
 

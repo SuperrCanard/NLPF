@@ -135,11 +135,31 @@ module.exports = {
         });
     },
 
-    getAllProjectSorted: function (number, callback) {
+    getNbProjectContributor: function (project_id, callback) {
         var real_results = [];
 
-        /*** [TODO] Rajouter la formule du prof pour pouvoir faire l'order by Count(X) ***/
-        var str = "SELECT * FROM \"project\" ORDER BY xxx LIMIT " + number;
+        var str = "SELECT COUNT(DISTINCT user.id) FROM \"project\", \"contribution\" WHERE project.project_id = contribution.ref_project_id AND project.project_id = " + project_id;
+        var query = client.query(str);
+
+        console.log("getNbProjectContributor: " + str)
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
+    getAllProjectSorted: function (number, callback) {
+       var real_results = [];
+
+        var str = "SELECT * FROM \"project\" ORDER BY project.total_amount LIMIT " + number;
         var query = client.query(str);
 
         console.log("getAllProjectSorted: " + str)
@@ -288,7 +308,7 @@ module.exports = {
         var real_results = [];
         var totals = [];
 
-        var str = "SELECT COUNT(compensation.amount) AS \"total_amount\" FROM \"project\", \"contribution\", \"compensation\" WHERE \"project\".project_id = \"compensation\".ref_project_id AND \"contribution\".ref_compensation_id = \"compensation\".compensation_id AND \"project\".project_id = " + projectId;
+        var str = "SELECT SUM(compensation.amount) AS \"total_amount\" FROM \"project\", \"contribution\", \"compensation\" WHERE \"project\".project_id = \"compensation\".ref_project_id AND \"contribution\".ref_compensation_id = \"compensation\".compensation_id AND \"project\".project_id = " + projectId;
         var query = client.query(str);
 
         console.log("updateTotalAmountProject: " + str);
