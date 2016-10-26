@@ -12,11 +12,13 @@ $(document).ready(function () {
         /*** Evenement de réception des projets en temps réel ***/
 
         socket.on('newProject', function (project) {
-            $('#projectDisplay').prepend($('<span id="project' + project["id"] + '"></span>'));
+            $('#projectDisplay').prepend($('<span id="project' + project["project_id"] + '"></span>'));
 
-            var idButton = "projectButton" + project["id"];
+            var idButton = "projectButton" + project["project_id"];
 
-            displayProject("#project" + project["id"], project, idButton);
+            printfObject(project);
+
+            displayProject("#project" + project["project_id"], project, idButton);
 
             var this_project = project;
 

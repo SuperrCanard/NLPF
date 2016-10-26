@@ -81,44 +81,53 @@ io.on('connection', function (socket) {
 
     /*** Add a user ***/
 
-    socket.on("addUser", function (user) {
-        console.log("User added to the database");
-        utils.printfObject(user);
-
-        sql.addUser(user.name, user.firstname, user.email, user.password);
+    socket.on("newUser", function (user) {
+        sql.addUser(user.name, user.firstname, user.email, user.password, function (results) {
+            console.log("User added to the database");
+            utils.printfObject(results);
+        });
     });
 
     /*** Send all projects to the user ***/
 
     socket.on("getAllProjects", function (nothing) {
-        console.log("The user has requested all projects");
-        var projectArray = sql.getAllProject();
+        sql.getAllProject(function (projectArray) {
+            console.log("The user has requested all projects");
+            utils.printfObject(projectArray);
 
-        for (var i = 0; i < projectArray.length; ++i) {
-            socket.emit('newProject', projectArray[i]);
-        }
+            for (var i = 0; i < projectArray.length; ++i) {
+                socket.emit('newProject', projectArray[i]);
+            }
+        });
+
     });
 
     /*** Send all projects sorted to the user ***/
 
     socket.on("getAllProjectsSorted", function (nothing) {
-        console.log("The user has requested all projects sorted");
-        var projectArray = sql.getAllProjectSorted();
 
-        for (var i = 0; i < projectArray.length; ++i) {
-            socket.emit('newProject', projectArray[i]);
-        }
+        var projectArray = sql.getAllProjectSorted(function (projectArray) {
+            console.log("The user has requested all projects sorted");
+            utils.printfObject(projectArray);
+
+            for (var i = 0; i < projectArray.length; ++i) {
+                socket.emit('newProject', projectArray[i]);
+            }
+        });
+
+
     });
 
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.description, project.contact, project.userId, project.date);
+        sql.addProject(project.name, project.description, project.contact, project.userId, project.img, function (results) {
+            console.log("New project added");
+            utils.printfObject(results);
 
-        console.log("New project added");
-        utils.printfObject(project);
+            io.emit('newProject', results);
+        });
 
-        io.emit('newProject', project);
     });
 
     /*** Set session content ***/
@@ -133,12 +142,15 @@ io.on('connection', function (socket) {
     /*** Get a specific project ***/
 
     socket.on('getProject', function (projectId) {
-        console.log("project '" + projectId + "' requested");
-        var project = sql.getProjectById(projectId);
 
-        utils.printfObject(project);
+        var project = sql.getProjectById(projectId, function (results) {
+            console.log("project '" + projectId + "' requested");
 
-        socket.emit('getProject', project);
+            utils.printfObject(project);
+
+            socket.emit('getProject', project);
+        });
+
     });
 
     /*** Get session content ***/

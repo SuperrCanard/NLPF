@@ -1,16 +1,16 @@
-DROP TABLE IF EXISTS "user";
-DROP TABLE IF EXISTS "project";
-DROP TABLE IF EXISTS "compensation";
-DROP TABLE IF EXISTS contribution;
+DROP TABLE IF EXISTS "user" CASCADE;
+DROP TABLE IF EXISTS "project" CASCADE;
+DROP TABLE IF EXISTS "compensation" CASCADE;
+DROP TABLE IF EXISTS contribution CASCADE;
 
 -- Table: "user"
 
 CREATE TABLE "user"
 (
   user_id serial NOT NULL,
-  "name" "char"[] NOT NULL,
-  "firstname" "char"[] NOT NULL,
-  email text NOT NULL,
+  "name" text NOT NULL,
+  "firstname" text NOT NULL,
+  email text NOT NULL UNIQUE,
   password text NOT NULL,
   CONSTRAINT user_id PRIMARY KEY (user_id)
 );
@@ -20,9 +20,11 @@ CREATE TABLE "user"
 CREATE TABLE "project"
 (
   project_id serial NOT NULL,
-  "name" "char"[] NOT NULL,
+  "name" text NOT NULL,
+  "total_amount" integer NOT NULL,
   "description" text NOT NULL,
   "contact" text NOT NULL,
+  "image" text NOT NULL,
   ref_user_id serial NOT NULL,
   "date" date NOT NULL,
   CONSTRAINT project_id PRIMARY KEY (project_id),
@@ -36,7 +38,7 @@ CREATE TABLE "project"
 CREATE TABLE "compensation"
 (
   compensation_id serial NOT NULL,
-  "name" "char"[] NOT NULL,
+  "name" text NOT NULL,
   "description" text,
   amount integer NOT NULL,
   ref_project_id serial NOT NULL,
