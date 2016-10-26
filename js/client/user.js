@@ -1,6 +1,26 @@
 $(document).ready(function () {
-
+		$("#submitUser").click(submitUser);
 	});
+
+	var userName = false;
+	var password = false;
+	var userFirstname = false;
+	var email = false;
+
+	function submitUser()
+	{
+		var myuser = {
+			name : $('#name').val(),
+			firstname : $('#firstname').val(),
+			email : $('#mail').val(),
+			password : $('#password').val()
+		};
+
+		socket.emit("newUser", {
+			user : myuser
+		})
+		window.location = './connexion.html';
+	}
 
 	function surligne(champ, erreur)
 	{
@@ -14,16 +34,37 @@ $(document).ready(function () {
 	function verifName(champ)
 	{
 	   if(champ.value.length < 2 || champ.value.length > 40)
-		   {
+		{
 		      surligne(champ, true);
 		      alert("Veuillez entrer un nom ne dépassant pas les 40 charactères");
-		      return false;
-		   }
+		    switch (champ.id)
+		    {
+		    	case 'name':
+		    		userName = false;
+		    		break;
+	    		case 'firstname':
+	    			userFirstname = false;
+	    			break;
+	    		default:
+	    			return false;
+		    }
+		}
 		   else
 		   {
 		      surligne(champ, false);
-		      return true;
+		      switch (champ.id)
+			    {
+			    	case 'name':
+			    		userName = true;
+			    		break;
+		    		case 'firstname':
+		    			userFirstname = true;
+		    			break;
+		    		default:
+		    			return true;
+			    }
 		   }
+		   verifUser();
 	}
 
 	function verifMail(champ)
@@ -33,27 +74,40 @@ $(document).ready(function () {
 	   {
 	      surligne(champ, true);
 	      alert("Veuillez entrer une adresse mail valide");
-	      return false;
+	      email = false;
 	   }
 	   else
 	   {
 	      surligne(champ, false);
-	      return true;
+	      email = true;
 	   }
+	 verifUser();  
 	}
 
 	function verifPassword(champ)
 	{
-	   var amount = parseInt(champ.value);
-	   if(isNaN(amount) || amount < 1)
+	   if(champ.value.length < 7) 
 	   {
 	      surligne(champ, true);
 	      alert("Veuillez entrer un password valide");
-	      return false;
+	      password = false;
 	   }
 	   else
 	   {
 	      surligne(champ, false);
-	      return true;
+	      password = true;
 	   }
+	 verifUser();
+	}
+
+	function verifUser()
+	{
+		if (userName && userFirstname && password && email)
+		{
+			document.getElementById('submitUser').disabled = '';
+		}
+		else
+		{
+			document.getElementById('submitUser').disabled = 'disabled';
+		}
 	}

@@ -1,9 +1,19 @@
 $(document).ready(function () {
 
 		$("#submitCompensation").click(createCompensation);
+		$("#submitProject").click(submit);
 	});
 
     var index = 1;
+    var listCompensation = [];
+    var compName = false;
+    var compAmount = false;
+    var compDesc = false;
+    var projName = false;
+    var projAuthor = false;
+    var projDesc = false;
+    var projContact = false;
+
 	function createCompensation()
 	{
 		var compensationName = document.getElementById("compensationname").value;
@@ -11,7 +21,15 @@ $(document).ready(function () {
 		$("#displayCompensation").prepend($('<span id="compensation' + index + '"></span>'));
 		displayCompensationDetails("#compensation" + index, $("#compensationname").val(),
 								 $("#compensationdesc").val(), $("#amount").val());
+		var compensation = {
+			id : index,
+			name : $("#compensationname").val(),
+			desc : $("#compensationdesc").val(),
+			amount : $("#amount").val()
+		};
+		listCompensation.push(compensation);
 		++index;
+		 verifProject();
 	}
 
 	function submit()
@@ -21,12 +39,20 @@ $(document).ready(function () {
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('contact').val();
 		var date = new Date();
-		var myproject = Project.create(projectName, 0, date, projectDesc, projectAuthor, projectContact);
-
+		
+		var myproject = {
+			name : projectName, 
+			gain : 0, 
+			date : date, 
+			description : projectDesc, 
+			author : projectAuthor, 
+			contact : projectContact,
+			compensation : listCompensation
+			};
 		socket.emit('newProject', {
 			project : myproject
 		});
-		 window.location = '../index.html';
+		 window.location = './index.html';
 	}
 
 	function submitCompensation()
@@ -36,7 +62,14 @@ $(document).ready(function () {
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('contact').val();
 		var date = new Date();
-		var myproject = Project.create(projectName, 0, date, projectDesc, projectAuthor, projectContact);
+		var myproject = {
+			name : projectName, 
+			gain : 0, 
+			date : date, 
+			description : projectDesc, 
+			author : projectAuthor, 
+			contact : projectContact
+		};
 
 		socket.emit('newProject', {
 			project : myproject
@@ -54,17 +87,47 @@ $(document).ready(function () {
 
 	function verifName(champ)
 	{
-	   if(champ.value.length < 2 || champ.value.length > 25)
-		   {
-		      surligne(champ, true);
-		      alert("Veuillez entrer un nom ne dépassant pas les 25 charactères");
-		      return false;
-		   }
-		   else
-		   {
-		      surligne(champ, false);
-		      return true;
-		   }
+
+	   if(champ.value.length <= 2 || champ.value.length > 40)
+	   {
+	      surligne(champ, true);
+	      alert("Veuillez entrer un nom ne dépassant pas les 40 charactères");
+	      switch(champ.id)
+	      {
+	      	case 'compensationname':
+	      		compName = false;
+	      		break;
+	      	case 'projectname':
+	      		projName = false;
+	      		break;
+	      	case 'authorname':
+	      		projAuthor = false;
+	      		break;
+	      	default:
+	      		return false;
+	      }
+	      
+	   }
+	   else
+	   {
+	      surligne(champ, false);
+	      switch(champ.id)
+		  {
+	      	case 'compensationname':
+	      		compName = true;
+	      		break;
+  			case 'projectname':
+	      		projName = true;
+	      		break;
+	      	case 'authorname':
+	      		projAuthor = true;
+	      		break;
+	      	default:
+	      		return true;
+	      }
+	   }
+	   verifCompensation();
+	   verifProject();
 	}
 
 	function verifDesc(champ)
@@ -73,13 +136,35 @@ $(document).ready(function () {
 		{
 			surligne(champ, true);
 		    alert("Veuillez entrer une description supérieur à 140 charactères");
-		    return false
+		    switch (champ.id)
+		    {
+		    	case 'projectdesc':
+		    		projDesc = false;
+		    		break;
+	    		case 'compensationdesc':
+	    			compDesc = false;
+	    			break;
+	    		default:
+	    			return false;
+		    }
 		}
 		else
 		{
 			surligne(champ, false);
-		    return true;
+		      switch (champ.id)
+		    {
+		    	case 'projectdesc':
+		    		projDesc = true;
+		    		break;
+	    		case 'compensationdesc':
+	    			compDesc = true;
+	    			break;
+	    		default:
+	    			return true;
+		    }
 		}
+		verifCompensation();
+	    verifProject();
 	}
 
 	function verifMail(champ)
@@ -89,13 +174,14 @@ $(document).ready(function () {
 	   {
 	      surligne(champ, true);
 	      alert("Veuillez entrer une adresse mail valide");
-	      return false;
+	      projContact = false;
 	   }
 	   else
 	   {
 	      surligne(champ, false);
-	      return true;
+	      projContact = true;
 	   }
+	   verifProject();
 	}
 
 	function verifAmount(champ)
@@ -105,26 +191,38 @@ $(document).ready(function () {
 	   {
 	      surligne(champ, true);
 	      alert("Veuillez indiquer un montant positif");
-	      return false;
+	      compAmount = false;
 	   }
 	   else
 	   {
 	      surligne(champ, false);
-	      return true;
+	      compAmount = true;
+	   }
+	   verifCompensation();
+	   verifProject();
+	}
+
+	function verifCompensation()
+	{
+	   if(compAmount && compDesc && compName)
+	   {
+   			document.getElementById('submitCompensation').disabled = '';
+	   }
+	   else
+	   {
+	    	document.getElementById('submitCompensation').disabled = 'disabled';  
 	   }
 	}
 
-	function verifForm(f)
+	function verifProject()
 	{
-	   var nameOk = verifName(f.name);
-	   var mailOk = verifMail(f.email);
-	   var amoutOk = verifAmount(f.amount);
-	   if(nameOk && mailOk && amountOk)
-	      return true;
+		console.log(projAuthor, projDesc, projName, projContact, index);
+	   if(projAuthor && projDesc && projName && projContact && index > 1)
+	   {
+   			document.getElementById('submitProject').disabled = '';
+	   }
 	   else
 	   {
-	      alert("Veuillez remplir correctement tous les champs");
-	      return false;
+	    	document.getElementById('submitProject').disabled = 'disabled';  
 	   }
-	   submit();
 	}
