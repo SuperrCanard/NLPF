@@ -175,6 +175,82 @@ module.exports = {
         });
     },
 
+    deleteContribution: function (userId, compensationId, callback) {
+        function updateTotalAmountProject(projectId, callback) {
+            var real_results = [];
+            var totals = [];
+
+            var str = "SELECT SUM(compensation.amount) AS \"total_amount\" FROM \"project\", \"contribution\", \"compensation\" WHERE \"project\".project_id = \"compensation\".ref_project_id AND \"contribution\".ref_compensation_id = \"compensation\".compensation_id AND \"project\".project_id = " + projectId;
+            var query = client.query(str);
+
+            console.log("updateTotalAmountProject: " + str);
+
+            query.on('row', function (row) {
+                totals.push(row);
+            });
+
+            query.on('end', function (results) {
+                var total = totals[0].total_amount;
+                var str2 = "UPDATE \"project\" SET total_amount = " + total + " WhERE project_id = " + projectId;
+                console.log("updateTotalAmountProject: " + str2);
+
+                var query2 = client.query(str2);
+
+                query2.on('row', function (row) {
+                    real_results.push(row);
+                });
+
+                query2.on('error', function (err) {
+                    console.log('Query error: ' + err);
+                });
+
+                query2.on('end', function (results) {
+                    callback(real_results);
+                });
+            });
+
+            query.on('error', function (err) {
+                console.log('Query error: ' + err);
+            });
+        }
+
+        var real_results = [];
+
+        var str = "DELETE FROM \"contribution\" WHERE \"contribution\".ref_user_id = " + userId + " AND \"contribution\".ref_compensation_id = " + compensationId;
+        var query = client.query(str);
+
+        console.log("deleteContribution: " + str);
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            var ref_project_id = [];
+            var str2 = "SELECT ref_project_id FROM compensation WHERE compensation.compensation_id = " + compensationId;
+            var query2 = client.query(str2);
+
+            query2.on('row', function (row) {
+                ref_project_id.push(row);
+            });
+
+            query2.on('end', function (results) {
+                updateTotalAmountProject(ref_project_id[0].ref_project_id, function (results) {
+                    callback(real_results);
+                });
+            });
+
+            query2.on('error', function (err) {
+                console.log('Query error: ' + err);
+            });
+
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
     getAllProject: function (callback) {
         var real_results = [];
 

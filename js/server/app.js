@@ -168,6 +168,17 @@ io.on('connection', function (socket) {
 
     });
 
+    /*** Remove contribution to a project ***/
+
+    socket.on('deleteContribution', function (contribution) {
+        sql.deleteContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
+            console.log("User removed his contribution to a project");
+
+            socket.emit('needUpdate', {});
+        });
+
+    });
+
     /*** Add compensation to a project ***/
 
     socket.on('newCompensation', function (compensation) {
