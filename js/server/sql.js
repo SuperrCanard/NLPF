@@ -72,7 +72,7 @@ module.exports = {
         });
     },
 
-    addContribution: function (userId, compensationId) {
+    addContribution: function (userId, compensationId, callback) {
         var real_results = [];
 
         var str = "INSERT INTO \"contribution\" VALUES (default, now(), " + userId + ", " + compensationId + ") RETURNING contribution_id, date, ref_user_id, ref_compensation_id";

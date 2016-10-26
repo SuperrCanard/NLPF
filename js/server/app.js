@@ -158,6 +158,24 @@ io.on('connection', function (socket) {
 
     });
 
+    /*** Contribute to a project ***/
+
+    socket.on('newContribution', function (contribution) {
+        sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
+            console.log("User contributed to a project");
+        });
+
+    });
+
+    /*** Add compensation to a project ***/
+
+    socket.on('newCompensation', function (compensation) {
+        sql.addCompensation(compensation.ref_project_id, compensation.name, compensation.description, compensation.amount, function (results) {
+            console.log("User created a compensation to a project");
+        });
+
+    });
+
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
