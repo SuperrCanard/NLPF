@@ -44,7 +44,7 @@ module.exports = {
 
         query.on('end', function (results) {
             for (var i = 0; i < compensations.length; ++i) {
-                addCompensation(results.project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results) { });
+                addCompensation(real_results.project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results) { });
             }
 
             callback(real_results);
