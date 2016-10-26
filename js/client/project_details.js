@@ -12,6 +12,9 @@ $(document).ready(function () {
         /***[TODO] Modifier les différentes informations de la page en fonction du projet récupéré ***/
         $("#projectTitle").text(this_project["name"]);
         //etc.
+
+        displayProject("#project", this_project);
+
     });
 
 });

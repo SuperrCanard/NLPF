@@ -11,6 +11,32 @@ body {
     padding: 0px 10px;
 }
 
+.panel-primary {
+	margin-top: 50px;
+	width: 40%;
+}
+
+.control-label {
+	white-space: nowrap;
+	margin-right: 20px;
+}
+
+.col-sm-10 {
+	margin-bottom: 30px;
+}
+
+#projectPanel {
+	float: left;
+	width: 40%;
+	margin-left: 20px;
+}
+
+#compensationPanel {
+	float: right;
+	width: 40%;
+	margin-right: 80px;
+}
+
 .createproject{
 	float: left;
 	width: 50%;
