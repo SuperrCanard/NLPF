@@ -16,9 +16,7 @@ $(document).ready(function () {
 			password : $('#password').val()
 		};
 
-		socket.emit("newUser", {
-			user : myuser
-		})
+		socket.emit("newUser", myuser);
 		window.location = './connexion.html';
 	}
 
