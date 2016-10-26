@@ -5,11 +5,15 @@ var url = require('url');
 var io = require('socket.io')(app);
 var sql = require('./sql');
 
-var ioArray = [];
-var sessions = [];
-var hashSessions = [];
-var sql_user = [];
 
+/*** Données volatiles ***/
+var ioArray = []; // Tableau des sockets
+var sessions = []; // Tableau des sessions (pour le partage de variable entre les pages côté client)
+var hashSessions = []; // Tableau des identifiants de session (pour reconnaitre les différents clients)
+var sql_user = []; // Tableau des utilisateurs connectés (pour faire le lien avec les users de la base de données)
+
+
+/*** Fonction de gestion des requêtes HTTP ***/
 function createServer(req, res) {
     var path = url.parse(req.url).pathname;
     var htmldir = __dirname + "/../..";
@@ -33,9 +37,11 @@ function createServer(req, res) {
     }
 }
 
+/*** Ecoute sur le port 8080 et connexion au serveur sql ***/
 app.listen(8080);
 sql.connection();
 
+/*** Permet de retrouver l'identifiant de session en fonction du hash ***/
 function getSessionByHash(hash) {
     if (!hash)
         return -2;
@@ -49,7 +55,7 @@ function getSessionByHash(hash) {
     return -1;
 }
 
-
+/*** Bind toutes les fonctions d'interaction avec le client ***/
 io.on('connection', function (socket) {
     ioArray.push(socket);
     sessions.push({});
@@ -157,11 +163,6 @@ io.on('connection', function (socket) {
 
     socket.on('newContribution', function (contribution) {
         sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
-            /*** [TODO] Update le montant total du projet concerné ***/
-            /*sql.updateTotalAmountProject(projectArray[i].project_id, function (results) {
-                      utils.printfObject(projectArray[i]);
-                      socket.emit('newProject', projectArray[i]);
-                });*/
             console.log("User contributed to a project");
         });
 
@@ -219,8 +220,3 @@ io.on('connection', function (socket) {
     });
 
 });
-
-
-
-  // wait for the event raised by the client
-  
