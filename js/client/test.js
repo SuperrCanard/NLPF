@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     //sendMessage("newUser", { name: "Toto", firstname: "Test", email: "toto@test.com", password: "tototest" });
+    sendMessage("connection", { name: "Toto", firstname: "Test", email: "toto@test.com", password: "tototest" });
 
     //sendMessage("newProject", { name: "test1", total_amount: 1600, contact: 'blabla', userId: 1, description: 'Lorem ipsum dolor sit amet', img: './images/windows.jpg' });
     /*sendMessage("newProject", { name: "test2", total_amount: 1700, contact: 'blabla', userId: 1, description: 'Lorem ipsum dosdfsdflor sit amet', img: './images/windows.jpg' });

@@ -56,7 +56,28 @@ module.exports = {
         var str = "INSERT INTO \"compensation\" VALUES (default, '" + name + "', '" + description + "', " + amount + ", " + projectId + ") RETURNING compensation_id, name, description, amount, ref_project_id";
         var query = client.query(str);
 
-        console.log("addCompensation: " + str)
+        console.log("addCompensation: " + str);
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
+    addContribution: function(userId, compensationId) {
+        var real_results = [];
+
+        var str = "INSERT INTO \"contribution\" VALUES (default, now(), " + userId + ", " + compensationId + ") RETURNING contribution_id, date, ref_user_id, ref_compensation_id";
+        var query = client.query(str);
+
+        console.log("addContribution: " + str);
 
         query.on('row', function (row) {
             real_results.push(row);
@@ -178,10 +199,31 @@ module.exports = {
         });
     },
 
+    getTotalAmountProject: function(projectId) {
+         var real_results = [];
+
+        var str = "SELECT COUNT(compensation.amount) AS \"total_amount\" FROM \"project\", \"contribution\", \"compensation\" WHERE \"project\".project_id = \"compensation\".ref_product_id AND \"contribution\".ref_compensation_id = \"compensation\".compensation_id AND \"project\".project_id = " + projectId;
+        var query = client.query(str);
+
+        console.log("getTotalAmountProject: " + str)
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
     getUserByEmailPassword: function (email, password, callback) {
         var real_results = [];
 
-        var str = "SELECT * FROM \"user\" WHERE \"user\".email = " + email + " AND \"user\".password = " + password;
+        var str = "SELECT * FROM \"user\" WHERE \"user\".email = '" + email + "' AND \"user\".password = '" + password + "'";
         var query = client.query(str);
 
         console.log("getUserByEmailPassword: " + str)

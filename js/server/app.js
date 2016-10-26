@@ -56,6 +56,7 @@ io.on('connection', function (socket) {
 
     var session_id = sessions.length - 1;
     var user_id = ioArray.length - 1;
+    var sql_user = { user_id: -1 }; // -1 = not connected
 
     console.log("New user: " + user_id + " (hash = " + hashSessions[session_id] + ")");
 
@@ -88,6 +89,37 @@ io.on('connection', function (socket) {
         });
     });
 
+    /*** Connection ***/
+
+    socket.on("connection", function (user) {
+        sql.getUserByEmailPassword(user.email, user.password, function (results) {
+            console.log("User tried to connect as " + user.email + " (pass: " + user.password + ")");
+            if (results.length == 0)
+                console.log("Connection failed");
+            else {
+                console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
+                sql_user = results[0];
+            }
+            utils.printfObject(results);
+        });
+    });
+
+    /*** Get user information ***/
+
+    socket.on("getUserInfo", function (nothing) {
+        console.log("User has requested his information");
+        utils.printfObject(sql_user);
+
+        socket.emit("getUserInfo", sql_user);
+    });
+
+    /*** Disconnection ***/
+
+    socket.on("disconnection", function (nothing) {
+        console.log("User has disconnected");
+        sql_user = { user_id: -1 };
+    });
+
     /*** Send all projects to the user ***/
 
     socket.on("getAllProjects", function (nothing) {
@@ -96,6 +128,7 @@ io.on('connection', function (socket) {
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
+                projectArray[i].total_amount = sql.getTotalAmountProject(projectArray[i].project_id);
                 socket.emit('newProject', projectArray[i]);
             }
         });
@@ -111,6 +144,7 @@ io.on('connection', function (socket) {
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
+                projectArray[i].total_amount = sql.getTotalAmountProject(projectArray[i].project_id);
                 socket.emit('newProject', projectArray[i]);
             }
         });
@@ -121,7 +155,7 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.description, project.contact, project.userId, project.img, function (results) {
+        sql.addProject(project.name, project.description, project.contact, sql_user.user_id, project.img, function (results) {
             console.log("New project added");
             utils.printfObject(results);
 
