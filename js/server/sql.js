@@ -89,7 +89,24 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results);
+            var ref_project_id = [];
+            var str2 = "SELECT ref_project_id FROM compensation WHERE compensation.compensation_id = " + compensationId;
+            var query2 = client.query(str2);
+
+            query2.on('row', function (row) {
+                ref_project_id.push(row);
+            });
+
+            query2.on('end', function (results) {
+                updateTotalAmountProject(ref_project_id, function (results) {
+                    callback(real_results);
+                });
+            });
+
+            query2.on('error', function (err) {
+                console.log('Query error: ' + err);
+            });
+
         });
 
         query.on('error', function (err) {
