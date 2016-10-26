@@ -200,6 +200,69 @@ module.exports = {
         });
     },
 
+    getUserById: function (id, callback) {
+        var real_results = [];
+
+        var str = "SELECT * FROM \"user\" WHERE \"user\".user_id = " + id;
+        var query = client.query(str);
+
+        console.log("getUserById: " + str)
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
+    getCompensationById: function (id, callback) {
+        var real_results = [];
+
+        var str = "SELECT * FROM \"compensation\" WHERE \"compensation\".compensation_id = " + id;
+        var query = client.query(str);
+
+        console.log("getCompensationById: " + str)
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
+    getContributionById: function (id, callback) {
+        var real_results = [];
+
+        var str = "SELECT * FROM \"contribution\" WHERE \"contribution\".contribution_id = " + id;
+        var query = client.query(str);
+
+        console.log("getContributionById: " + str)
+
+        query.on('row', function (row) {
+            real_results.push(row);
+        });
+
+        query.on('end', function (results) {
+            callback(real_results);
+        });
+
+        query.on('error', function (err) {
+            console.log('Query error: ' + err);
+        });
+    },
+
     getCompensationByProject: function (projectId, callback) {
         var real_results = [];
 

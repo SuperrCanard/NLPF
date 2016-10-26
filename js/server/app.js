@@ -106,8 +106,6 @@ io.on('connection', function (socket) {
             else {
                 console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
                 sql_user[session_id] = results[0];
-                console.log("sql_user:");
-                utils.printfObject(sql_user[session_id]);
             }
             utils.printfObject(results);
         });
