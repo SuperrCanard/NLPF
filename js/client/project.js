@@ -24,7 +24,7 @@ $(document).ready(function () {
 		var compensation = {
 			id : index,
 			name : $("#compensationname").val(),
-			desc : $("#compensationdesc").val(),
+			description : $("#compensationdesc").val(),
 			amount : $("#amount").val()
 		};
 		listCompensation.push(compensation);
@@ -37,7 +37,7 @@ $(document).ready(function () {
 		var projectName = $('#projectname').val();
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
-		var projectContact = $('contact').val();
+		var projectContact = $('#contact').val();
 		var date = new Date();
 		
 		var myproject = {
@@ -47,11 +47,10 @@ $(document).ready(function () {
 			description : projectDesc, 
 			author : projectAuthor, 
 			contact : projectContact,
+            image: "", //TODO: Ajouter l'image pour lors de la création de projet
 			compensations : listCompensation
 			};
-		socket.emit('newProject', {
-			project : myproject
-		});
+		socket.emit('newProject', myproject);
 		 window.location = './index.html';
 	}
 
@@ -60,7 +59,7 @@ $(document).ready(function () {
 		var projectName = $('#projectname').val();
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
-		var projectContact = $('contact').val();
+		var projectContact = $('#contact').val();
 		var date = new Date();
 		var myproject = {
 			name : projectName, 
@@ -68,12 +67,11 @@ $(document).ready(function () {
 			date : date, 
 			description : projectDesc, 
 			author : projectAuthor, 
-			contact : projectContact
+			contact : projectContact,
+            image: "" //TODO: Ajouter l'image pour lors de la création de projet
 		};
 
-		socket.emit('newProject', {
-			project : myproject
-		});
+		socket.emit('newProject', myproject);
 		 window.location = '../index.html';
 	}
 
