@@ -21,6 +21,7 @@ CREATE TABLE "project"
 (
   project_id serial NOT NULL,
   "name" text NOT NULL,
+  "author" text NOT NULL,
   "total_amount" integer NOT NULL,
   "description" text NOT NULL,
   "contact" text NOT NULL,

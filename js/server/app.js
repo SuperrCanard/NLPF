@@ -8,6 +8,7 @@ var sql = require('./sql');
 var ioArray = [];
 var sessions = [];
 var hashSessions = [];
+var sql_user = [];
 
 function createServer(req, res) {
     var path = url.parse(req.url).pathname;
@@ -53,10 +54,10 @@ io.on('connection', function (socket) {
     ioArray.push(socket);
     sessions.push({});
     hashSessions.push(utils.makeId(10)); //1024
+    sql_user.push({ user_id: -1 });
 
     var session_id = sessions.length - 1;
     var user_id = ioArray.length - 1;
-    var sql_user = { user_id: -1 }; // -1 = not connected
 
     console.log("New user: " + user_id + " (hash = " + hashSessions[session_id] + ")");
 
@@ -98,7 +99,9 @@ io.on('connection', function (socket) {
                 console.log("Connection failed");
             else {
                 console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
-                sql_user = results[0];
+                sql_user[session_id] = results[0];
+                console.log("sql_user:");
+                utils.printfObject(sql_user[session_id]);
             }
             utils.printfObject(results);
         });
@@ -108,16 +111,16 @@ io.on('connection', function (socket) {
 
     socket.on("getUserInfo", function (nothing) {
         console.log("User has requested his information");
-        utils.printfObject(sql_user);
+        utils.printfObject(sql_user[session_id]);
 
-        socket.emit("getUserInfo", sql_user);
+        socket.emit("getUserInfo", sql_user[session_id]);
     });
 
     /*** Disconnection ***/
 
     socket.on("disconnection", function (nothing) {
         console.log("User has disconnected");
-        sql_user = { user_id: -1 };
+        sql_user[session_id] = { user_id: -1 };
     });
 
     /*** Send all projects to the user ***/
@@ -128,12 +131,16 @@ io.on('connection', function (socket) {
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                projectArray[i].total_amount = sql.getTotalAmountProject(projectArray[i].project_id);
                 socket.emit('newProject', projectArray[i]);
             }
         });
 
     });
+
+    /*sql.updateTotalAmountProject(projectArray[i].project_id, function (results) {
+                      utils.printfObject(projectArray[i]);
+                      socket.emit('newProject', projectArray[i]);
+                });*/
 
     /*** Send all projects sorted to the user ***/
 
@@ -144,7 +151,6 @@ io.on('connection', function (socket) {
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                projectArray[i].total_amount = sql.getTotalAmountProject(projectArray[i].project_id);
                 socket.emit('newProject', projectArray[i]);
             }
         });
@@ -155,7 +161,7 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.description, project.contact, sql_user.user_id, project.img, function (results) {
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, function (results) {
             console.log("New project added");
             utils.printfObject(results);
 
