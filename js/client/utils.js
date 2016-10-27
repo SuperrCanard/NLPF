@@ -33,12 +33,30 @@ function importHtml(elt, filename) {
     $(elt).load(filename);
 }
 
+function displayProjectDetails(elt, project, idButton) {
+    var projectName = project["name"] + " - Créé le " + project["date"];
+
+    $(elt).html('<div class="panel panel-primary"> \
+            <div class = "panel-heading">' + projectName + '</div>\
+                <div class = "panel-body"> \
+                    <img src="' + project["image"] + '" alt="Image"></img> \
+                    <dl> \
+                        <dt>Description</dt> \
+                        <dd>' + project["description"] + '</dd> \
+                    </dl> \
+                    <div class="author">' + "Créé par " + project["author"] + '</div>\
+                    <div class="contact">' + "Contact : " + project["contact"] + '</div>\
+                </div> \
+            </div>');
+}
+
 function displayProject(elt, project, idButton) {
     var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
 
     $(elt).html('<div class="project"> \
             <form> \
                 <fieldset> \
+                <input type="button" id="' + idButton + '" value="Vpir"></input> \
                     <legend>' + projectName + '</legend> \
                     <img src="' + project["image"] + '" alt="Image"></img> \
                     <div class="header"> \
@@ -46,7 +64,6 @@ function displayProject(elt, project, idButton) {
                         Crée le: ' + project["date"] + '<br/> \
                     </div> \
                     <div class="description">' + project["description"] + '</div> \
-                    <input type="button" id="' + idButton + '" value="Participer !"></input> \
                 </fieldset> \
             </form> \
         </div>');
@@ -71,7 +88,7 @@ function displayCompensationDetails(elt, name, description, amount) {
                 <fieldset> \
                     <legend>' + name + " - " + amount + " €" + '</legend> \
                     ' + description + '\
-                    <button type="button primary-button">Supprimer</button> \
+                    <button class="btn btn-primary">Supprimer</button> \
                 </fieldset> \
             </form> \
         </div>');

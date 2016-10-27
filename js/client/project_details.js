@@ -13,7 +13,7 @@ $(document).ready(function () {
         $("#projectTitle").text(this_project["name"]);
         //etc.
 
-        displayProject("#project", this_project);
+        displayProjectDetails("#project", this_project);
 
     });
 

@@ -38,8 +38,9 @@ $(document).ready(function () {
 
             var this_project = project;
 
-            $('#' + idButton).click(function () {
 
+            $('#' + idButton).click(function () {
+                console.log("coucou");
                 /***Amener a la page de participation / présentation de projet ***/
                 session.project = this_project;
 
