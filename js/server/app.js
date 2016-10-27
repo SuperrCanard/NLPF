@@ -106,14 +106,16 @@ io.on('connection', function (socket) {
     /*** Connection ***/
 
     socket.on("connection", function (user) {
-        sql.getUserByEmailPassword(user.email, user.password, function (results) {
+        sql.getUserByEmailPassword(user.email, user.password, function (results, success) {
             console.log("User tried to connect as " + user.email + " (pass: " + user.password + ")");
-            if (results.length == 0)
+            if (!success)
                 console.log("Connection failed");
             else {
                 console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
                 sql_user[session_id] = results[0];
             }
+
+            socket.emit("connection", {results: results, success: success});
             utils.printfObject(results);
         });
     });
@@ -261,7 +263,7 @@ io.on('connection', function (socket) {
 
             utils.printfObject(results);
 
-            socket.emit('getProjectById', {results: results, success:success} );
+            socket.emit('getProjectById', { results: results, success: success });
         });
 
     });
