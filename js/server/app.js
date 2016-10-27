@@ -90,8 +90,15 @@ io.on('connection', function (socket) {
     /*** Add a user ***/
 
     socket.on("newUser", function (user) {
-        sql.addUser(user.name, user.firstname, user.email, user.password, function (results) {
-            console.log("User added to the database");
+        sql.addUser(user.name, user.firstname, user.email, user.password, function (results, success) {
+            if (success) {
+                console.log("User added to the database");
+            }
+            else {
+                console.log("Failed to add user to the database");
+            }
+
+            socket.emit("newUser", { success: success, results: results });
             utils.printfObject(results);
         });
     });
@@ -130,12 +137,12 @@ io.on('connection', function (socket) {
     /*** Send all projects to the user ***/
 
     socket.on("getAllProjects", function (nothing) {
-        sql.getAllProject(function (projectArray) {
+        sql.getAllProject(function (projectArray, success) {
             console.log("The user has requested all projects");
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                socket.emit('newProject', projectArray[i]);
+                socket.emit('getProject', projectArray[i]);
             }
         });
 
@@ -145,12 +152,12 @@ io.on('connection', function (socket) {
 
     socket.on("getAllProjectsSorted", function (nothing) {
 
-        var projectArray = sql.getAllProjectSorted(30, function (projectArray) {
+        var projectArray = sql.getAllProjectSorted(30, function (projectArray, success) {
             console.log("The user has requested all projects sorted");
             utils.printfObject(projectArray);
 
             for (var i = 0; i < projectArray.length; ++i) {
-                socket.emit('newProjectSorted', projectArray[i]);
+                socket.emit('getProjectSorted', projectArray[i]);
             }
         });
 
@@ -160,21 +167,37 @@ io.on('connection', function (socket) {
     /*** Contribute to a project ***/
 
     socket.on('newContribution', function (contribution) {
-        sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
-            console.log("User contributed to a project");
+        sql.addContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results, success) {
 
-            socket.emit('needUpdate', {});
+            if (success) {
+                console.log("User contributed to a project");
+                socket.emit('needUpdate', {});
+            }
+            else {
+                console.log("Failed to add contribution to the database");
+            }
+
+            utils.printfObject(results);
+            socket.emit("newContribution", { success: success, results: results });
         });
 
     });
 
-    /*** Remove contribution to a project ***/
+    /*** Remove contribution from a project ***/
 
     socket.on('deleteContribution', function (contribution) {
-        sql.deleteContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results) {
-            console.log("User removed his contribution to a project");
+        sql.deleteContribution(sql_user[session_id].user_id, contribution.ref_compensation_id, function (results, success) {
 
-            socket.emit('needUpdate', {});
+            if (success) {
+                console.log("User removed his contribution from a project");
+                socket.emit('needUpdate', {});
+            }
+            else {
+                console.log("Failed to remove contribution from a project");
+            }
+
+            utils.printfObject(results);
+            socket.emit("deleteContribution", { success: success, results: results });
         });
 
     });
@@ -182,8 +205,16 @@ io.on('connection', function (socket) {
     /*** Add compensation to a project ***/
 
     socket.on('newCompensation', function (compensation) {
-        sql.addCompensation(compensation.ref_project_id, compensation.name, compensation.description, compensation.amount, function (results) {
-            console.log("User created a compensation to a project");
+        sql.addCompensation(compensation.ref_project_id, compensation.name, compensation.description, compensation.amount, function (results, success) {
+            if (success) {
+                console.log("User created a compensation for a project");
+            }
+            else {
+                console.log("Failed to create a compensation for a project");
+            }
+
+            utils.printfObject(results);
+            socket.emit("newCompensation", { success: success, results: results });
         });
 
     });
@@ -191,11 +222,18 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results) {
-            console.log("New project added");
-            utils.printfObject(results);
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results, success) {
 
-            io.emit('newProject', results);
+            if (success) {
+                console.log("New project added");
+                io.emit('getProject', results);
+            }
+            else {
+                console.log("Failed to add a new project");
+            }
+
+            socket.emit('newProject', { results: results, success: success });
+            utils.printfObject(results);
         });
 
     });
@@ -211,14 +249,19 @@ io.on('connection', function (socket) {
 
     /*** Get a specific project ***/
 
-    socket.on('getProject', function (projectId) {
+    socket.on('getProjectById', function (projectId) {
 
-        var project = sql.getProjectById(projectId, function (results) {
-            console.log("project '" + projectId + "' requested");
+        sql.getProjectById(projectId, function (results, success) {
+            if (success) {
+                console.log("project '" + projectId + "' requested");
+            }
+            else {
+                console.log("Failed to get project '" + projectId + "'");
+            }
 
-            utils.printfObject(project);
+            utils.printfObject(results);
 
-            socket.emit('getProject', project);
+            socket.emit('getProjectById', {results: results, success:success} );
         });
 
     });

@@ -19,7 +19,7 @@ $(document).ready(function () {
 
         /*** Evenement de réception des projets ***/
 
-        socket.on('newProject', function (project) {
+        socket.on('getProject', function (project) {
 
             var project_id = "project" + project["project_id"];
             var node = $("#" + project_id);
