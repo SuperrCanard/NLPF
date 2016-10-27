@@ -19,6 +19,17 @@ $(document).ready(function () {
 	        email: $("#mail").val(),
 	        password: $("#password").val()
 	    });
+        
+        socket.on("connection", function (result) {
+            if (result.success) {
+                /***[TODO] Connexion réussie ***/
+
+                window.location = './index.html'; // On redirige vers la page d'accueil
+            }
+            else {
+                /***[TODO] Connexion échouée ***/
+            }
+        });
 	}
 
 	function verifChamp(champ)

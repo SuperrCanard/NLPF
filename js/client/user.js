@@ -17,7 +17,36 @@ $(document).ready(function () {
 		};
 
 		socket.emit("newUser", myuser);
-		window.location = './connexion.html';
+
+		socket.on("newUser", function (result) {
+		    if (result.success) {
+		        /***[TODO] La création d'un utilisateur a réussie ***/
+
+		        // Connexion automatique de l'utilisateur
+		        socket.emit("connection", myuser);
+
+		        socket.on("connection", function (result) {
+
+                    if (result.success) {
+                        /***[TODO] On a créé le compte et on a réussi a se connecter ***/
+
+                        window.location = './index.html'; // On redirige vers la page d'accueil
+                    }
+                    else {
+                        /***[TODO] On a créé le compte mais on n'a pas réussi a se connecter ==> Erreur inconnue ***/
+                        
+                    }
+
+		        });
+		        
+		    }
+		    else {
+		        /***[TODO] La création de compte a échouée ***/
+		    }
+
+		});
+
+		
 	}
 
 	function surligne(champ, erreur)
