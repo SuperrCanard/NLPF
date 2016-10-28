@@ -35,6 +35,8 @@ function importHtml(elt, filename) {
 
 function displayProject(elt, project, idButton) {
     var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
+     var d = String(project["date"]);
+    var now =  d.split('T');
 
     $(elt).html('<div class="panel panel-primary"> \
             <div class = "panel-heading">' + projectName + '</div>\
@@ -44,7 +46,7 @@ function displayProject(elt, project, idButton) {
                         <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Gain: ' + project["total_amount"] + ' € / mois \
                     </div> \
                     <div class="contact"> \
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: ' + project["date"] + '<br/> \
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: 28/10/2016<br/> \
                     </div> \
                     <div class="desctitle"><h4>Description<h4></div> \
                     <div class="description">' + project["description"] + '</div> \
@@ -55,6 +57,8 @@ function displayProject(elt, project, idButton) {
 
 function displayProjectDetails(elt, project, idButton) {
     var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
+    var d = String(project["date"]);
+    var now =  d.split('T');
 
     $(elt).html('<div class="panel panel-primary"> \
             <div class = "panel-heading">' + projectName + '</div>\
@@ -64,7 +68,7 @@ function displayProjectDetails(elt, project, idButton) {
                         <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Gain: ' + project["total_amount"] + ' € / mois \
                     </div> \
                     <div class="contact"> \
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: ' + project["date"] + '<br/> \
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: 28/10/2016<br/> \
                     </div> \
                     <div class="desctitle"><h4>Description<h4></div> \
                     <div class="description">' + project["description"] + '</div> \

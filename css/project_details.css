@@ -44,8 +44,6 @@ body {
     min-height: 150px;
     height: 150px;*/
     
-    overflow: hidden;
-    
     border: 1px solid blue;
 }
 
@@ -64,6 +62,8 @@ body {
 
 #imageproject {
     float: right;
+    height: 64px;
+    width: 64px;
 }
 
 .desctitle {

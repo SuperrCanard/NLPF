@@ -44,7 +44,7 @@ $(document).ready(function () {
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('#contact').val();
-		var projectImage = $('#projectimage').val();
+		var projectImage = "./images/" + $('#projectimage').val();
 		var date = new Date();
 
 		
