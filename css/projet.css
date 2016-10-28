@@ -16,6 +16,7 @@ body {
 	width: 40%;
 }
 
+
 .btn-primary {
 	float: left;
 	margin-right: 50px;
@@ -60,3 +61,12 @@ body {
 	margin-bottom: 20px;
 }
 
+#displayCompensation {
+	margin-top: 400px;
+}
+
+#com {	
+	margin-top: 20px;
+	word-wrap: break-word;
+	width: 100%;
+}

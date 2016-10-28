@@ -28,6 +28,8 @@ $(document).ready(function () {
             }
             else {
                 /***[TODO] Connexion échouée ***/
+
+                alert("Adresse mail ou mot de passe incorrect");
             }
         });
 	}

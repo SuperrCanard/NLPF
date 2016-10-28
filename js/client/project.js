@@ -13,14 +13,20 @@ $(document).ready(function () {
     var projAuthor = false;
     var projDesc = false;
     var projContact = false;
+    var projImage = false;
+
+    function Delete(champ)
+    {
+    	champ.parentElement.parentElement.remove();
+    }
 
 	function createCompensation()
 	{
 		var compensationName = document.getElementById("compensationname").value;
 		console.log($(compensationName));
-		$("#displayCompensation").prepend($('<span id="compensation' + index + '"></span>'));
+		$("#displayCompensation").after($('<span id="compensation' + index + '"></span>'));
 		displayCompensationDetails("#compensation" + index, $("#compensationname").val(),
-								 $("#compensationdesc").val(), $("#amount").val());
+								 $("#compensationdesc").val(), $("#amount").val(), index);
 		var compensation = {
 			id : index,
 			name : $("#compensationname").val(),
@@ -38,6 +44,7 @@ $(document).ready(function () {
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('#contact').val();
+		var projectImage = $('#image').val();
 		var date = new Date();
 		
 		var myproject = {
@@ -47,7 +54,7 @@ $(document).ready(function () {
 			description : projectDesc, 
 			author : projectAuthor, 
 			contact : projectContact,
-            image: "", //TODO: Ajouter l'image pour lors de la création de projet
+            image: projectImage, 
 			compensations : listCompensation
 			};
 		socket.emit('newProject', myproject);
@@ -68,7 +75,7 @@ $(document).ready(function () {
 			description : projectDesc, 
 			author : projectAuthor, 
 			contact : projectContact,
-            image: "" //TODO: Ajouter l'image pour lors de la création de projet
+            image: "" 
 		};
 
 		socket.emit('newProject', myproject);
@@ -180,6 +187,24 @@ $(document).ready(function () {
 	   verifProject();
 	}
 
+
+	function verifUrl(champ)
+	{
+	   var regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/;
+	   if(!regex.test(champ.value))
+	   {
+	      surligne(champ, true);
+	      alert("Veuillez entrer une url valide");
+	      projImage = false;
+	   }
+	   else
+	   {
+	      surligne(champ, false);
+	      projImage = true;
+	   }
+	   verifProject();
+	}
+
 	function verifAmount(champ)
 	{
 	   var amount = parseInt(champ.value);
@@ -213,7 +238,7 @@ $(document).ready(function () {
 	function verifProject()
 	{
 		console.log(projAuthor, projDesc, projName, projContact, index);
-	   if(projAuthor && projDesc && projName && projContact && index > 1)
+	   if(projAuthor && projDesc && projName && projImage && projContact && index > 1)
 	   {
    			document.getElementById('submitProject').disabled = '';
 	   }
