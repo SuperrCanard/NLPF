@@ -224,7 +224,7 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results, success) {
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.image, project.compensations, function (results, success) {
 
             if (success) {
                 console.log("New project added");
