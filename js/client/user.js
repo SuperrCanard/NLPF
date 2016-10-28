@@ -28,7 +28,7 @@ $(document).ready(function () {
 		        socket.on("connection", function (result) {
 
                     if (result.success) {
-                        /***[TODO] On a créé le compte et on a réussi a se connecter ***S/
+                        /***[TODO] On a créé le compte et on a réussi a se connecter ***/
 
                         window.location = './index.html'; // On redirige vers la page d'accueil
                     }
@@ -61,10 +61,10 @@ $(document).ready(function () {
 
 	function verifName(champ)
 	{
-	   if(champ.value.length < 2 || champ.value.length => 40)
+	   if(champ.value.length < 2 || champ.value.length >= 40)
 		{
 		      surligne(champ, true);
-		      alert("Veuillez entrer un nom ne dépassant pas les 40 charactères");
+		      alert("Veuillez entrer un nom ne dépassant pas les 40 caractères");
 		    switch (champ.id)
 		    {
 		    	case 'name':
@@ -118,7 +118,7 @@ $(document).ready(function () {
 	   if(!regex.test(champ.value)) 
 	   {
 	      surligne(champ, true);
-	      alert("Votre mot de passe doit faire au minimum 8 charactères et doit contenir au moins une majuscule et un nombre ou un charactère spécial");
+	      alert("Votre mot de passe doit faire au minimum 8 caractères et doit contenir au moins une majuscule et un nombre ou un caractère spécial");
 	      password = false;
 	   }
 	   else

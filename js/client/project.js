@@ -44,8 +44,9 @@ $(document).ready(function () {
 		var projectDesc = $('#projectdesc').val();
 		var projectAuthor = $('#authorname').val();
 		var projectContact = $('#contact').val();
-		var projectImage = $('#image').val();
+		var projectImage = $('#projectimage').val();
 		var date = new Date();
+
 		
 		var myproject = {
 			name : projectName, 
@@ -57,6 +58,7 @@ $(document).ready(function () {
             image: projectImage, 
 			compensations : listCompensation
 			};
+
 		socket.emit('newProject', myproject);
 		 window.location = './index.html';
 	}
@@ -93,10 +95,10 @@ $(document).ready(function () {
 	function verifName(champ)
 	{
 
-	   if(champ.value.length < 2 || champ.value.length > 40)
+	   if(champ.value.length < 2 || champ.value.length >= 40)
 	   {
 	      surligne(champ, true);
-	      alert("Veuillez entrer un nom ne dépassant pas les 40 charactères");
+	      alert("Veuillez entrer un nom ne dépassant pas les 40 caractères");
 	      switch(champ.id)
 	      {
 	      	case 'compensationname':
@@ -140,7 +142,7 @@ $(document).ready(function () {
 		if (champ.value.length < 140)
 		{
 			surligne(champ, true);
-		    alert("Veuillez entrer une description supérieur à 140 charactères");
+		    alert("Veuillez entrer une description supérieur à 140 caractères");
 		    projDesc = false;
 		}
 		else
@@ -158,7 +160,7 @@ $(document).ready(function () {
 		if (champ.value.length < 40)
 		{
 			surligne(champ, true);
-		    alert("Veuillez entrer une description supérieur à 40 charactères");
+		    alert("Veuillez entrer une description supérieur à 40 caractères");
 		    compDesc = false;
 		}
 		else
@@ -190,8 +192,7 @@ $(document).ready(function () {
 
 	function verifUrl(champ)
 	{
-	   var regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/;
-	   if(!regex.test(champ.value))
+	   if(champ.value.length <= 1)
 	   {
 	      surligne(champ, true);
 	      alert("Veuillez entrer une url valide");
