@@ -7,6 +7,8 @@ $(document).ready(function () {
     socket.on("getSession", function (attr) {
         session = attr;
 
+        $("#confirm1").text("Vous confirmez votre participation à hauteur de " + session.compensation.amount + " euros par mois au projet " + session.project.name + " de " + session.project.author);
+
         var compensation_id = "compensation" + session.compensation.compensation_id;
 
         $('#compensations').prepend($('<span id="' + compensation_id + '"></span>'));
