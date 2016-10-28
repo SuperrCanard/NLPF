@@ -28,13 +28,13 @@ $(document).ready(function () {
 		        socket.on("connection", function (result) {
 
                     if (result.success) {
-                        /***[TODO] On a créé le compte et on a réussi a se connecter ***/
+                        /***[TODO] On a créé le compte et on a réussi a se connecter ***S/
 
                         window.location = './index.html'; // On redirige vers la page d'accueil
                     }
                     else {
                         /***[TODO] On a créé le compte mais on n'a pas réussi a se connecter ==> Erreur inconnue ***/
-                        
+                        alert("Impossible de se connecter");
                     }
 
 		        });
@@ -42,6 +42,7 @@ $(document).ready(function () {
 		    }
 		    else {
 		        /***[TODO] La création de compte a échouée ***/
+		         alert("La création du compte a échoué");
 		    }
 
 		});
@@ -60,7 +61,7 @@ $(document).ready(function () {
 
 	function verifName(champ)
 	{
-	   if(champ.value.length < 2 || champ.value.length > 40)
+	   if(champ.value.length < 2 || champ.value.length => 40)
 		{
 		      surligne(champ, true);
 		      alert("Veuillez entrer un nom ne dépassant pas les 40 charactères");
@@ -113,10 +114,11 @@ $(document).ready(function () {
 
 	function verifPassword(champ)
 	{
-	   if(champ.value.length < 7) 
+		var regex = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+	   if(!regex.test(champ.value)) 
 	   {
 	      surligne(champ, true);
-	      alert("Veuillez entrer un password valide");
+	      alert("Votre mot de passe doit faire au minimum 8 charactères et doit contenir au moins une majuscule et un nombre ou un charactère spécial");
 	      password = false;
 	   }
 	   else
