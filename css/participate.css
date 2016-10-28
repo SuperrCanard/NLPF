@@ -1,5 +1,5 @@
 .confirmation {
-     border: solid 3px black;  
+     border: solid 3px blue;  
      
      margin: 5px 0px;
      padding: 3px;
@@ -13,4 +13,11 @@
      height: 150px;
         
      overflow: hidden;
+}
+
+#com {
+     float: left;
+     word-wrap: break-word;
+     width: 50%;
+     margin-top: 30px;
 }

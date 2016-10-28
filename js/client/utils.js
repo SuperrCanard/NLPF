@@ -60,7 +60,7 @@ function displayProjectDetails(elt, project, idButton) {
     var d = String(project["date"]);
     var now =  d.split('T');
 
-    $(elt).html('<div class="panel panel-primary"> \
+    $(elt).html('<div class="panel panel-primary" id="projectdisp"> \
             <div class = "panel-heading">' + projectName + '</div>\
                 <div class = "panel-body"> \
                     <img id="imageproject" src="' + project["image"] + '" alt="Image"></img> \
