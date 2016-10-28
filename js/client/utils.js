@@ -111,6 +111,19 @@ function displayCompensationParticipate(elt, compensation, idButton) {
         </div>');
 }
 
+function displayCompensationParticipate2(elt, compensation, idButton) {
+    $(elt).html('<div class="panel panel-primary" id="com"> \
+            <div class = "panel-heading">' + compensation.name + " - " + compensation.amount + " €" +  '</div>\
+                <div class = "panel-body"> \
+                    <dl> \
+                      <dt>Description</dt> \
+                      <dd>' + compensation.description + '</dd> \
+                    </dl> \
+                    <button class="btn btn-primary" id="' + idButton + '">J\'accepte</button> \
+                </div> \
+        </div>');
+}
+
 function printfObject(object) {
 
 	var output = printfObject2(object);

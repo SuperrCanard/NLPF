@@ -5,7 +5,6 @@ $(document).ready(function () {
     sendMessage("getSession", {});
 
     socket.on("getSession", function (attr) {
-        printfObject(attr);
         session = attr;
 
         var compensation_id = "compensation" + session.compensation.compensation_id;
@@ -13,7 +12,7 @@ $(document).ready(function () {
         $('#compensations').prepend($('<span id="' + compensation_id + '"></span>'));
 
         var idButton = "CompensationButton" + session.compensation.compensation_id;
-        displayCompensationParticipate("#" + compensation_id, session.compensation, idButton);
+        displayCompensationParticipate2("#" + compensation_id, session.compensation, idButton);
 
         $('#' + idButton).click(function () {
 

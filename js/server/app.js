@@ -108,7 +108,7 @@ io.on('connection', function (socket) {
     socket.on("connection", function (user) {
         sql.getUserByEmailPassword(user.email, user.password, function (results, success) {
             console.log("User tried to connect as " + user.email + " (pass: " + user.password + ")");
-            if (!success)
+            if (!success || results.length == 0)
                 console.log("Connection failed");
             else {
                 console.log("User is now identified as " + user.email + " (id: " + results[0].user_id + ")");
