@@ -4,16 +4,15 @@ $(document).ready(function () {
 
     sendMessage("getSession", {});
 
-    socket.emit("getSession", function (attr) {
+    socket.on("getSession", function (attr) {
         session = attr;
 
         var compensation_id = "compensation" + session.compensation.compensation_id;
 
-        $('#displayCompensation').prepend($('<span id="' + compensation_id + '"></span>'));
+        $('#compensations').prepend($('<span id="' + compensation_id + '"></span>'));
 
         var idButton = "CompensationButton" + session.compensation.compensation_id;
-
-        displayCompensationParticipate("#" + compensation_id, session.compensation, idButton);
+        displayCompensationParticipate2("#" + compensation_id, session.compensation, idButton);
 
         $('#' + idButton).click(function () {
 

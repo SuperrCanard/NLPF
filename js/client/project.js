@@ -58,7 +58,7 @@ $(document).ready(function () {
             image: projectImage, 
 			compensations : listCompensation
 			};
-			printfObject(myproject);
+
 		socket.emit('newProject', myproject);
 		 window.location = './index.html';
 	}

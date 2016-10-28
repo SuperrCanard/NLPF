@@ -101,15 +101,30 @@ function displayCompensationDetails(elt, name, description, amount) {
         </div>');
 }
 
+
 function displayCompensationParticipate(elt, compensation, idButton) {
-    $(elt).html('<div class="contrepartie"> \
-            <form> \
-                <fieldset> \
-                    <legend>' + compensation.name + " - " + compensation.amount + " €" + '</legend> \
-                    ' + compensation.description + '\
-                    <button id="' + idButton + '" type="button primary-button">Supprimer</button> \
-                </fieldset> \
-            </form> \
+    $(elt).html('<div class="panel panel-primary" id="com"> \
+            <div class = "panel-heading">' + compensation.name + " - " + compensation.amount + " €" +  '</div>\
+                <div class = "panel-body"> \
+                    <dl> \
+                      <dt>Description</dt> \
+                      <dd>' + compensation.description + '</dd> \
+                    </dl> \
+                    <button class="btn btn-primary" id="' + idButton + '">Participer</button> \
+                </div> \
+        </div>');
+}
+
+function displayCompensationParticipate2(elt, compensation, idButton) {
+    $(elt).html('<div class="panel panel-primary" id="com"> \
+            <div class = "panel-heading">' + compensation.name + " - " + compensation.amount + " €" +  '</div>\
+                <div class = "panel-body"> \
+                    <dl> \
+                      <dt>Description</dt> \
+                      <dd>' + compensation.description + '</dd> \
+                    </dl> \
+                    <button class="btn btn-primary" id="' + idButton + '">J\'accepte</button> \
+                </div> \
         </div>');
 }
 
