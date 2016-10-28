@@ -53,6 +53,8 @@ body {
 
 #imageproject {
     float: right;
+    height: 64px;
+    width: 64px;
 }
 
 .desctitle {
