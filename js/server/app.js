@@ -224,7 +224,7 @@ io.on('connection', function (socket) {
     /*** On new project ***/
 
     socket.on('newProject', function (project) {
-        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.img, project.compensations, function (results, success) {
+        sql.addProject(project.name, project.author, project.description, project.contact, sql_user[session_id].user_id, project.image, project.compensations, function (results, success) {
 
             if (success) {
                 console.log("New project added");
@@ -264,6 +264,25 @@ io.on('connection', function (socket) {
             utils.printfObject(results);
 
             socket.emit('getProjectById', { results: results, success: success });
+        });
+
+    });
+
+    /*** Get compensations by project ***/
+
+    socket.on('getCompensationsByProject', function (projectId) {
+
+        sql.getCompensationByProject(projectId, function (results, success) {
+            if (success) {
+                console.log("compensations of project '" + projectId + "' requested");
+            }
+            else {
+                console.log("Failed to get compensations of project '" + projectId + "'");
+            }
+
+            utils.printfObject(results);
+
+            socket.emit('getCompensatiosByProject', { results: results, success: success });
         });
 
     });

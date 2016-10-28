@@ -15,7 +15,7 @@ function addCompensation(projectId, name, description, amount, callback) {
     });
 
     query.on('end', function (results) {
-        callback(real_results, true);
+        callback(real_results, (real_results.length > 0 ? true : false));
     });
 
     query.on('error', function (err) {
@@ -54,7 +54,7 @@ function updateTotalAmountProject(projectId, callback) {
         });
 
         query2.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
     });
 
@@ -84,7 +84,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -106,7 +106,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -133,7 +133,7 @@ module.exports = {
                 addCompensation(real_results[0].project_id, compensations[i].name, compensations[i].description, compensations[i].amount, function (results, success) { });
             }
 
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -235,7 +235,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -257,7 +257,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -279,7 +279,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -301,7 +301,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -324,7 +324,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -346,7 +346,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -368,7 +368,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -390,7 +390,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -412,7 +412,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
@@ -451,7 +451,7 @@ module.exports = {
             });
 
             query2.on('end', function (results) {
-                callback(real_results, true);
+                callback(real_results, (real_results.length > 0 ? true : false));
             });
         });
 
@@ -474,7 +474,7 @@ module.exports = {
         });
 
         query.on('end', function (results) {
-            callback(real_results, true);
+            callback(real_results, (real_results.length > 0 ? true : false));
         });
 
         query.on('error', function (err) {
