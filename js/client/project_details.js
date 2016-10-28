@@ -17,6 +17,7 @@ $(document).ready(function () {
         sendMessage("getCompensationsByProject", this_project.project_id);
 
         socket.on("getCompensationsByProject", function (result) {
+            printfObject(result);
             if (result.success) {
                 for (var i = 0; i < result.results.length; ++i) {
                     var compensation_id = "compensation" + result.results[i].compensation_id;

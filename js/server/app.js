@@ -282,7 +282,7 @@ io.on('connection', function (socket) {
 
             utils.printfObject(results);
 
-            socket.emit('getCompensatiosByProject', { results: results, success: success });
+            socket.emit('getCompensationsByProject', { results: results, success: success });
         });
 
     });
