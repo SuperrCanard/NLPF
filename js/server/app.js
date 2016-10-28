@@ -268,6 +268,25 @@ io.on('connection', function (socket) {
 
     });
 
+    /*** Get compensations by project ***/
+
+    socket.on('getCompensationsByProject', function (projectId) {
+
+        sql.getCompensationByProject(projectId, function (results, success) {
+            if (success) {
+                console.log("compensations of project '" + projectId + "' requested");
+            }
+            else {
+                console.log("Failed to get compensations of project '" + projectId + "'");
+            }
+
+            utils.printfObject(results);
+
+            socket.emit('getCompensatiosByProject', { results: results, success: success });
+        });
+
+    });
+
     /*** Get session content ***/
 
     socket.on("getSession", function (nothing) {

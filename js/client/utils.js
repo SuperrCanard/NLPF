@@ -33,37 +33,22 @@ function importHtml(elt, filename) {
     $(elt).load(filename);
 }
 
-function displayProjectDetails(elt, project, idButton) {
-    var projectName = project["name"] + " - Créé le " + project["date"];
-
-    $(elt).html('<div class="panel panel-primary"> \
-            <div class = "panel-heading">' + projectName + '</div>\
-                <div class = "panel-body"> \
-                    <img src="' + project["image"] + '" alt="Image"></img> \
-                    <dl> \
-                        <dt>Description</dt> \
-                        <dd>' + project["description"] + '</dd> \
-                    </dl> \
-                    <div class="author">' + "Créé par " + project["author"] + '</div>\
-                    <div class="contact">' + "Contact : " + project["contact"] + '</div>\
-                </div> \
-            </div>');
-}
-
 function displayProject(elt, project, idButton) {
     var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
 
-    $(elt).html('<div class="panel panel-primary"> \
-            <div class = "panel-heading">' + projectName + '</div>\
-                <div class = "panel-body"> \
-                <button class="btn btn-primary" id="' + idButton + '"">Participer</button> \
+    $(elt).html('<div class="project"> \
+            <form> \
+                <fieldset> \
+                    <legend>' + projectName + '</legend> \
                     <img src="' + project["image"] + '" alt="Image"></img> \
                     <div class="header"> \
                         Gain: ' + project["total_amount"] + ' € / mois<br/> \
                         Crée le: ' + project["date"] + '<br/> \
                     </div> \
                     <div class="description">' + project["description"] + '</div> \
-                </div> \
+                    <input type="button" id="' + idButton + '" value="Participer !"></input> \
+                </fieldset> \
+            </form> \
         </div>');
 
 }
@@ -80,16 +65,27 @@ function displayContrepartie(elt, name, description) {
         </div>');
 }
 
-function displayCompensationDetails(elt, name, description, amount, idButton) {
-    $(elt).html('<div class="panel panel-primary" id="com"> \
-            <div class = "panel-heading">' + name + ' - ' + amount + ' €' + '</div>\
-                <div class = "panel-body"> \
-                    <dl> \
-                        <dt>Description</dt> \
-                        <dd>' + description + '</dd> \
-                    </dl> \
-                    <button class="btn btn-primary" id="delete"' + idButton + ' onclick="Delete(this)">Supprimer</button> \
-                </div> \
+function displayCompensationDetails(elt, name, description, amount) {
+    $(elt).html('<div class="contrepartie"> \
+            <form> \
+                <fieldset> \
+                    <legend>' + name + " - " + amount + " €" + '</legend> \
+                    ' + description + '\
+                    <button type="button primary-button">Supprimer</button> \
+                </fieldset> \
+            </form> \
+        </div>');
+}
+
+function displayCompensationParticipate(elt, compensation, idButton) {
+    $(elt).html('<div class="contrepartie"> \
+            <form> \
+                <fieldset> \
+                    <legend>' + compensation.name + " - " + compensation.amount + " €" + '</legend> \
+                    ' + compensation.description + '\
+                    <button id="' + idButton + '" type="button primary-button">Supprimer</button> \
+                </fieldset> \
+            </form> \
         </div>');
 }
 

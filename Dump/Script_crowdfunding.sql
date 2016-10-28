@@ -57,6 +57,7 @@ CREATE TABLE contribution
   date date NOT NULL,
   ref_user_id serial NOT NULL,
   ref_compensation_id serial NOT NULL,
+  UNIQUE (ref_user_id, ref_compensation_id),
   CONSTRAINT contribution_id PRIMARY KEY (contribution_id),
   CONSTRAINT ref_Compensation_id FOREIGN KEY (ref_Compensation_id)
       REFERENCES "compensation" (compensation_id) MATCH SIMPLE
