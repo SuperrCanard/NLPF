@@ -10,9 +10,7 @@ $(document).ready(function () {
         var this_project = session.project;
 
         /***[TODO] Modifier les différentes informations de la page en fonction du projet récupéré ***/
-        $("#projectTitle").text(this_project["name"]);
         //etc.
-
         displayProjectDetails("#project", this_project);
 
     });

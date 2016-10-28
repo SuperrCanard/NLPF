@@ -56,16 +56,18 @@ function displayProject(elt, project, idButton) {
     $(elt).html('<div class="panel panel-primary"> \
             <div class = "panel-heading">' + projectName + '</div>\
                 <div class = "panel-body"> \
-                <button class="btn btn-primary" id="' + idButton + '"">Participer</button> \
-                    <img src="' + project["image"] + '" alt="Image"></img> \
-                    <div class="header"> \
-                        Gain: ' + project["total_amount"] + ' € / mois<br/> \
-                        Crée le: ' + project["date"] + '<br/> \
+                    <img id="imageproject" src="' + project["image"] + '" alt="Image"></img> \
+                     <div class="gain"> \
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Gain: ' + project["total_amount"] + ' € / mois \
                     </div> \
+                    <div class="contact"> \
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: ' + project["date"] + '<br/> \
+                    </div> \
+                    <div class="desctitle"><h4>Description<h4></div> \
                     <div class="description">' + project["description"] + '</div> \
+                    <button class="btn btn-primary" id="' + idButton + '"">Participer</button> \
                 </div> \
         </div>');
-
 }
 
 function displayContrepartie(elt, name, description) {
