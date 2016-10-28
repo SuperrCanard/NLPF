@@ -53,6 +53,25 @@ function displayProject(elt, project, idButton) {
         </div>');
 }
 
+function displayProjectDetails(elt, project, idButton) {
+    var projectName = "Projet #" + project["project_id"] + " - " + project["name"];
+
+    $(elt).html('<div class="panel panel-primary"> \
+            <div class = "panel-heading">' + projectName + '</div>\
+                <div class = "panel-body"> \
+                    <img id="imageproject" src="' + project["image"] + '" alt="Image"></img> \
+                     <div class="gain"> \
+                        <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Gain: ' + project["total_amount"] + ' € / mois \
+                    </div> \
+                    <div class="contact"> \
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Crée le: ' + project["date"] + '<br/> \
+                    </div> \
+                    <div class="desctitle"><h4>Description<h4></div> \
+                    <div class="description">' + project["description"] + '</div> \
+                </div> \
+        </div>');
+}
+
 function displayContrepartie(elt, name, description) {
     $(elt).html('<div class="contrepartie"> \
             <form> \
@@ -66,14 +85,15 @@ function displayContrepartie(elt, name, description) {
 }
 
 function displayCompensationDetails(elt, name, description, amount) {
-    $(elt).html('<div class="contrepartie"> \
-            <form> \
-                <fieldset> \
-                    <legend>' + name + " - " + amount + " €" + '</legend> \
-                    ' + description + '\
-                    <button type="button primary-button">Supprimer</button> \
-                </fieldset> \
-            </form> \
+    $(elt).html('<div class="panel panel-primary" id="com"> \
+            <div class = "panel-heading">' + name + " - " + amount + " €" +  '</div>\
+                <div class = "panel-body"> \
+                    <dl> \
+                      <dt>Description</dt> \
+                      <dd>' + description + '</dd> \
+                    </dl> \
+                    <button class="btn btn-primary" onclick="Delete(this)">Supprimer</button> \
+                </div> \
         </div>');
 }
 
