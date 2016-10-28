@@ -61,7 +61,7 @@ $(document).ready(function () {
 
 	function verifName(champ)
 	{
-	   if(champ.value.length < 2 || champ.value.length >= 40)
+	   if(champ.value.length < 2 || champ.value.length > 41)
 		{
 		      surligne(champ, true);
 		      alert("Veuillez entrer un nom ne dépassant pas les 40 caractères");
